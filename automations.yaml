@@ -1,0 +1,13 @@
+- id: '1608500474114'
+  alias: test
+  description: ''
+  trigger:
+  - platform: time
+    at: '21:44'
+  condition: []
+  action:
+  - type: turn_off
+    device_id: e10f12991d6011eb998ce732ae9912b9
+    entity_id: light.fish_tank_light
+    domain: light
+  mode: single
