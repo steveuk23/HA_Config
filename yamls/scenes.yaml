@@ -1,0 +1,58 @@
+- id: '1607627577793'
+  name: Room Lights on
+  entities:
+    light.dining_room_light_level_on_off:
+      brightness: 212
+      off_brightness:
+      friendly_name: Dining Room Light
+      supported_features: 41
+      state: 'on'
+    input_boolean.room_lamp:
+      editable: true
+      friendly_name: Room Lamp
+      icon: mdi:lamp
+      state: 'on'
+    input_boolean.sideboard:
+      editable: true
+      friendly_name: Sideboard
+      icon: mdi:lightbulb
+      state: 'on'
+    input_boolean.tv_led:
+      editable: true
+      friendly_name: Tv LED
+      icon: mdi:lightbulb
+      state: 'on'
+    input_boolean.room_light:
+      editable: true
+      friendly_name: Room Light
+      icon: mdi:lightbulb
+      state: 'on'
+  icon: mdi:lightbulb
+- id: '1607628067015'
+  name: Room Lights off
+  entities:
+    light.dining_room_light_level_on_off:
+      off_brightness:
+      friendly_name: Dining Room Light
+      supported_features: 41
+      state: 'off'
+    input_boolean.room_lamp:
+      editable: true
+      friendly_name: Room Lamp
+      icon: mdi:lamp
+      state: 'off'
+    input_boolean.sideboard:
+      editable: true
+      friendly_name: Sideboard
+      icon: mdi:lightbulb
+      state: 'off'
+    input_boolean.tv_led:
+      editable: true
+      friendly_name: Tv LED
+      icon: mdi:lightbulb
+      state: 'off'
+    input_boolean.room_light:
+      editable: true
+      friendly_name: Room Light
+      icon: mdi:lightbulb
+      state: 'off'

@@ -1,0 +1,9 @@
+boost:
+  alias: Boost Heating
+  sequence:
+  - service: hive.boost_heating
+    data:
+      entity_id: climate.heating
+      time_period: 00:30
+      temperature: '20'
+  mode: single
