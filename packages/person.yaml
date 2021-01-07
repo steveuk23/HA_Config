@@ -1,0 +1,215 @@
+binary_sensor:
+  - platform: template
+    sensors:
+      steve_moving:
+        friendly_name: "Steve Moving"
+        value_template: >-
+          {{ ((is_state('device_tracker.mi_a2_lite', 'driving') or is_state('device_tracker.mi_a2_lite', 'moving')) and 
+                (state_attr('device_tracker.mi_a2_lite', 'address') != state_attr('device_tracker.mi_a2_lite', 'place')) and 
+                (state_attr('device_tracker.mi_a2_lite', 'place') == '-' and state_attr('device_tracker.mi_a2_lite', 'place') == none)) }}
+      sara_moving:
+        friendly_name: "Sara Moving"
+        value_template: >-
+          {{ ((is_state('device_tracker._sara', 'driving') or is_state('device_tracker._sara', 'moving')) and 
+                (state_attr('device_tracker._sara', 'address') != state_attr('device_tracker._sara', 'place')) and 
+                (state_attr('device_tracker._sara', 'place') == '-' or state_attr('device_tracker._sara', 'place') == none)) }}
+
+sensor:
+  - platform: template
+    sensors:
+      steve_location:
+        friendly_name: "Steve Location"
+        value_template: >-
+          {% if is_state('device_tracker.mi_a2_lite', 'home') %}
+            Home
+          {% elif (state_attr('device_tracker.mi_a2_lite', 'address') == state_attr('device_tracker.mi_a2_lite', 'place')) and (state_attr('device_tracker.mi_a2_lite', 'place') != '-' and state_attr('device_tracker.mi_a2_lite', 'place') != none) %}
+            {{state_attr('device_tracker.mi_a2_lite', 'place')}}
+          {% elif (states('device_tracker.mi_a2_lite') != 'moving') and (states('device_tracker.mi_a2_lite') != 'driving') %}
+            {% if states('device_tracker.mi_a2_lite') != 'not_home' %}
+              {{ state_attr('sensor.steve', 'devicetracker_zone') }}       
+            {% elif state_attr('sensor.steve', 'place_name') != '-' %}
+                {{ state_attr('sensor.steve', 'place_name') }}
+            {% else %}
+              {% if state_attr('sensor.steve', 'street') != '-' %}{{state_attr('sensor.steve', 'street')}}{% endif %}{% if state_attr('sensor.steve', 'city') != '-' %}, {{state_attr('sensor.steve', 'city')}}, {% if state_attr('sensor.steve', 'state_province') != '-' %}{{state_attr('sensor.steve', 'state_province')}}{% endif %}{% endif %}
+            {% endif %}
+          {% else %}
+            {% if state_attr('sensor.steve', 'place_name') != '-' %}
+              near {{ state_attr('sensor.steve', 'place_name') }}
+            {% else %}
+              on {% if state_attr('sensor.steve', 'street') != '-' %}{{state_attr('sensor.steve', 'street')}}{% endif %}          
+            {% endif %}
+          {% endif %}
+      steve_status:
+        friendly_name: "Steve"
+        value_template: >-
+          {% if is_state('device_tracker.mi_a2_lite', 'home') %}
+            Home
+          {% elif (state_attr('device_tracker.mi_a2_lite', 'address') == state_attr('device_tracker.mi_a2_lite', 'place')) and (state_attr('device_tracker.mi_a2_lite', 'place') != '-' and state_attr('device_tracker.mi_a2_lite', 'place') != none) %}
+            {{ states('sensor.steve_location') | replace("Street","St") | replace("Avenue","Ave") | replace("Boulevard","Blvd") | replace("Road","Rd") | replace("Parkway","Pkwy") | replace("Freeway","Fwy") | replace("Drive","Dr") | replace("Extension","Ext") }}
+          {% elif states('device_tracker.mi_a2_lite') == 'driving' %}
+            Driving {{ states('sensor.steve_location') | replace("Street","St") | replace("Avenue","Ave") | replace("Boulevard","Blvd") | replace("Road","Rd") | replace("Parkway","Pkwy") | replace("Freeway","Fwy") | replace("Drive","Dr") | replace("Extension","Ext") }}
+          {% elif states('device_tracker.mi_a2_lite') == 'moving' %}
+            Moving {{ states('sensor.steve_location') | replace("Street","St") | replace("Avenue","Ave") | replace("Boulevard","Blvd") | replace("Road","Rd") | replace("Parkway","Pkwy") | replace("Freeway","Fwy") | replace("Drive","Dr") | replace("Extension","Ext") }}
+          {% else %}
+            {{ states('sensor.steve_location') | replace("Street","St") | replace("Avenue","Ave") | replace("Boulevard","Blvd") | replace("Road","Rd") | replace("Parkway","Pkwy") | replace("Freeway","Fwy") | replace("Drive","Dr") | replace("Extension","Ext") }}
+          {% endif %} 
+        entity_picture_template: >-
+          {% if is_state('sensor.steve_location', 'Giant') %}
+            /local/image/person/steve/grocery.png
+          {% elif is_state('sensor.steve_location', 'Work (steve)') %}
+            /local/image/person/steve/work.png
+          {% elif states('device_tracker.mi_a2_lite') == 'driving' %}
+            /local/image/person/steve/driving.png
+          {% elif states('device_tracker.mi_a2_lite') == 'moving' %}
+            /local/image/person/steve/moving.png
+            {% elif states('sensor.steve_in_bed') == 'Yes' and states('device_tracker.mi_a2_lite') == 'home' %}
+            /local/image/person/steve/sleeping.png
+          {%else %} /local/image/person/steve/home.png{%endif%}
+      steve_at_loc_since:
+        friendly_name: "At Location Since"
+        value_template: >-
+          {% set time = (states.sensor.steve_location.last_changed.strftime("%s") | int ) %}
+          {% set day = time | timestamp_custom("%-d") | int %}
+          {% if (now().day - day) == 1 %}
+            Since Yesterday at {{ time | timestamp_custom("%-I:%M %p") }}
+          {% elif (now().day - day) < 0 %}
+            {% if now().day %}
+              Since Yesterday at {{ time | timestamp_custom("%-I:%M %p") }}
+            {% else %}
+              Since {{ time | timestamp_custom("%a, %b %-d at %-I:%M %p") }}
+            {% endif %}
+          {% elif (now().day - day) > 1 %}
+            Since {{ time | timestamp_custom("%a, %b %-d at %-I:%M %p") }}
+          {% else  %}
+            Since {{ time | timestamp_custom("%-I:%M %p") }}
+          {% endif %}
+      steve_place_type:
+        friendly_name: "steve Place Type"
+        value_template: >-
+          {{ state_attr('sensor.steve', 'place_type')  }}
+      steve_battery:
+        friendly_name: "Battery"
+        unit_of_measurement: '%'
+        value_template: "{{states.device_tracker.mi_a2_lite.attributes.battery }}"
+        icon_template: >-
+          mdi:battery{% if is_state_attr('device_tracker.mi_a2_lite', 'battery_charging', true) %}-charging{% else %}{% endif %}{% if 0<(state_attr('device_tracker.mi_a2_lite', 'battery') | float / 10 ) | round(0) * 10 < 100%}-{{ (state_attr('device_tracker.mi_a2_lite', 'battery') | float / 10 ) | round(0) * 10 }}{% else %}{% if (state_attr('device_tracker.mi_a2_lite', 'battery') | float / 10 ) | round(0) * 10 == 0%}-outline{%else%}{% if is_state_attr('device_tracker.mi_a2_lite', 'battery_charging', true) %}-100{% endif %}{% endif %}{% endif %}
+      steve_wifi:
+        friendly_name: "WiFi"
+        value_template: >-
+          {% if is_state_attr('device_tracker.mi_a2_lite', 'wifi_on', true) %}
+            on
+          {% else %}
+            off
+          {% endif %}
+        icon_template: >-
+          {% if is_state_attr('device_tracker.mi_a2_lite', 'wifi_on', true) %}
+            mdi:wifi
+          {% else %}
+            mdi:wifi-off
+          {% endif %}
+      steve_height:
+        value_template: >-
+          {% if is_state('binary_sensor.steve_moving', 'on') %}
+            70px
+          {% else %}
+            40px
+          {% endif %}
+      sara_location:
+        friendly_name: "Sara Location"
+        value_template: >-
+          {% if is_state('device_tracker._sara', 'home') %}
+            Home
+          {% elif (state_attr('device_tracker._sara', 'address') == state_attr('device_tracker._sara', 'place')) and (state_attr('device_tracker._sara', 'place') != '-' and state_attr('device_tracker._sara', 'place') != none) %}
+            {{state_attr('device_tracker._sara', 'place')}}
+          {% elif (states('device_tracker._sara') != 'moving') and (states('device_tracker._sara') != 'driving') %}
+            {% if states('device_tracker._sara') != 'not_home' %}
+              {{ state_attr('sensor.sara', 'devicetracker_zone') }}       
+            {% elif state_attr('sensor.sara', 'place_name') != '-' %}
+                {{ state_attr('sensor.sara', 'place_name') }}
+            {% else %}
+              {% if state_attr('sensor.sara', 'street') != '-' %}{{state_attr('sensor.sara', 'street')}}{% endif %}{% if state_attr('sensor.sara', 'city') != '-' %}, {{state_attr('sensor.sara', 'city')}}, {% if state_attr('sensor.sara', 'state_province') != '-' %}{{state_attr('sensor.sara', 'state_province')}}{% endif %}{% endif %}
+            {% endif %}
+          {% else %}
+            {% if state_attr('sensor.sara', 'place_name') != '-' %}
+              near {{ state_attr('sensor.sara', 'place_name') }}
+            {% else %}
+              on {% if state_attr('sensor.sara', 'street') != '-' %}{{state_attr('sensor.sara', 'street')}}{% endif %}          
+            {% endif %}
+          {% endif %}
+      sara_status:
+        friendly_name: "Sara"
+        value_template: >-
+          {% if is_state('device_tracker._sara', 'home') %}
+            Home
+          {% elif (state_attr('device_tracker._sara', 'address') == state_attr('device_tracker._sara', 'place')) and (state_attr('device_tracker._sara', 'place') != '-' and state_attr('device_tracker._sara', 'place') != none) %}
+            {{ states('sensor.sara_location') | replace("Street","St") | replace("Avenue","Ave") | replace("Boulevard","Blvd") | replace("Road","Rd") | replace("Parkway","Pkwy") | replace("Freeway","Fwy") | replace("Drive","Dr") | replace("Extension","Ext") }}
+          {% elif states('device_tracker._sara') == 'driving' %}
+            Driving {{ states('sensor.sara_location') | replace("Street","St") | replace("Avenue","Ave") | replace("Boulevard","Blvd") | replace("Road","Rd") | replace("Parkway","Pkwy") | replace("Freeway","Fwy") | replace("Drive","Dr") | replace("Extension","Ext") }}
+          {% elif states('device_tracker._sara') == 'moving' %}
+            Moving {{ states('sensor.sara_location') | replace("Street","St") | replace("Avenue","Ave") | replace("Boulevard","Blvd") | replace("Road","Rd") | replace("Parkway","Pkwy") | replace("Freeway","Fwy") | replace("Drive","Dr") | replace("Extension","Ext") }}
+          {% else %}
+            {{ states('sensor.sara_location') | replace("Street","St") | replace("Avenue","Ave") | replace("Boulevard","Blvd") | replace("Road","Rd") | replace("Parkway","Pkwy") | replace("Freeway","Fwy") | replace("Drive","Dr") | replace("Extension","Ext") }}
+          {% endif %} 
+        entity_picture_template: >-
+          {% if is_state('sensor.sara_location', 'Grocery Store') %}
+            /local/image/person/sara/grocery.png
+          {% elif state_attr('sensor.sara', 'place_type') == 'Target' %}
+            /local/image/person/sara/shopping.png
+          {% elif is_state('device_tracker._sara', 'Work (sara)') %}
+            /local/image/person/sara/work.png
+          {% elif states('device_tracker._sara') == 'driving' %}
+            /local/image/person/sara/driving.png
+          {% elif states('device_tracker._sara') == 'moving' %}
+            /local/image/person/sara/moving.png
+          {% elif states('sensor.sara_in_bed') == 'Yes' and states('device_tracker._sara') == 'home' %}
+            /local/image/person/sara/sleeping.png
+          {%else %} /local/image/person/sara/home.png{%endif%}
+      sara_at_loc_since:
+        friendly_name: "At Location Since"
+        value_template: >-
+          {% set time = (states.sensor.sara_location.last_changed.strftime("%s") | int ) %}
+          {% set day = time | timestamp_custom("%-d") | int %}
+          {% if (now().day - day) == 1 %}
+            Since Yesterday at {{ time | timestamp_custom("%-I:%M %p") }}
+          {% elif (now().day - day) < 0 %}
+            {% if now().day %}
+              Since Yesterday at {{ time | timestamp_custom("%-I:%M %p") }}
+            {% else %}
+              Since {{ time | timestamp_custom("%a, %b %-d at %-I:%M %p") }}
+            {% endif %}
+          {% elif (now().day - day) > 1 %}
+            Since {{ time | timestamp_custom("%a, %b %-d at %-I:%M %p") }}
+          {% else  %}
+            Since {{ time | timestamp_custom("%-I:%M %p") }}
+          {% endif %}
+      sara_place_type:
+        friendly_name: "Sara Place Type"
+        value_template: >-
+          {{ state_attr('sensor.sara', 'place_type') }}
+      sara_battery:
+        friendly_name: "Battery"
+        unit_of_measurement: '%'
+        value_template: "{{states.device_tracker._sara.attributes.battery }}"
+        icon_template: >-
+          mdi:battery{% if is_state_attr('device_tracker._sara', 'battery_charging', true) %}-charging{% else %}{% endif %}{% if 0<(state_attr('device_tracker._sara', 'battery') | float / 10 ) | round(0) * 10 < 100%}-{{ (state_attr('device_tracker._sara', 'battery') | float / 10 ) | round(0) * 10 }}{% else %}{% if (state_attr('device_tracker._sara', 'battery') | float / 10 ) | round(0) * 10 == 0%}-outline{%else%}{% if is_state_attr('device_tracker._sara', 'battery_charging', true) %}-100{% endif %}{% endif %}{% endif %}
+      sara_wifi:
+        friendly_name: "WiFi"
+        value_template: >-
+          {% if is_state_attr('device_tracker._sara', 'wifi_on', true) %}
+            on
+          {% else %}
+            off
+          {% endif %}
+        icon_template: >-
+          {% if is_state_attr('device_tracker._sara', 'wifi_on', true) %}
+            mdi:wifi
+          {% else %}
+            mdi:wifi-off
+          {% endif %}
+      sara_height:
+        value_template: >-
+          {% if is_state('binary_sensor.sara_moving', 'on') %}
+            70px
+          {% else %}
+            40px
+          {% endif %}
