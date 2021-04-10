@@ -1,0 +1,86 @@
+# Example configuration.yaml entry
+
+  Upstairs Lights:
+    name: Upstairs Lights
+    icon: mdi:lightbulb
+    entities:
+      - light.saras_lamp
+      - light.steves_lamp
+      - light.nathans_led
+  kitchen:
+    name: Kitchen Lights
+    icon: mdi:lightbulb
+    entities:
+      - light.kitchen_led
+      - light.kitchen_lamp
+  Room Lights:
+    name: Room Lights
+    icon: mdi:lightbulb
+    entities:
+      - light.sideboard
+      - light.room_lamp
+      - light.tv_led
+      - light.dining_room
+  Outside Lights:
+    name: Outside Lights
+    icon: mdi:lightbulb
+    entities:
+      - light.porch
+  Hallway Lights:
+    name: Hallway Lights
+    icon: mdi:lightbulb
+    entities:
+      - light.hallway_lamp
+  Bedroom Lamps:
+    name: Bedroom Lamps
+    icon: mdi:lightbulb
+    entities:
+      - light.steves_lamp
+      - light.saras_lamp
+  Morning Lamps:
+    name: Morning Lamps
+    icon: mdi:lightbulb
+    entities:
+      - light.kitchen_lamp
+      - light.hallway_lamp
+      - light.room_lamp
+  People:
+    name: People
+    entities:
+      - device_tracker.steve_mobile_2
+      - device_tracker.sara_mobile
+      
+  motion_sensors:                                                                                                          
+    name: Motion Sensors                                                                                                 
+    icon: hass:walk                                                                                                      
+    entities:                                                                                                            
+     - binary_sensor.pir1                                                                                     
+     - binary_sensor.pir2
+     - binary_sensor.pir3
+     - binary_sensor.pir4
+     - binary_sensor.ikea_motion_occupancy
+     - binary_sensor.spare_occupancy
+     - binary_sensor.kitchen_motion_occupancy
+  door_sensors:
+    name: Door Sensors                                                                                                   
+    icon: hass:door                                                                                                      
+    entities: 
+     - binary_sensor.front_door_contact
+  window_sensors:                                                                                                          
+    name: Window Sensors                                                                                                 
+    icon: hass:window-closed                                                                                             
+    entities: 
+     - binary_sensor.room_window_contact
+     - binary_sensor.dining_room_left_contact   
+     
+      
+      
+      
+      
+      
+      
+    
+      
+      
+      
+      
