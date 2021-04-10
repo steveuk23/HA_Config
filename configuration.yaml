@@ -1,6 +1,6 @@
 homeassistant:
   customize: !include yamls/customize.yaml
-  packages: !include_dir_named packages
+ # packages: !include_dir_named packages
   
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
@@ -11,30 +11,21 @@ frontend:
 tts:
   - platform: google_translate
 
-# yamls
+# Yamls
+# Example configuration.yaml entry
 
 automation: !include automations.yaml
 camera: !include yamls/camera.yaml
 group: !include yamls/groups.yaml
 #home_modes: !include yamls/home_modes.yaml
-scene: !include yamls/scenes.yaml
-script: !include yamls/scripts.yaml
-sensor: !include yamls/sensor.yaml
+script: !include scripts.yaml
+#sensor: !include yamls/sensor.yaml
+sensor: !include_dir_merge_list sensors/
+scene: !include scenes.yaml
+#binary_sensor: !include /yamls/binary_sensor.yaml
+binary_sensor: !include_dir_merge_list binary_sensors/
 
-sensor places_steve:
-  - platform: places
-    name: steve
-    devicetracker_id: device_tracker.mi_a2_lite
-    options: zone,place
-    map_provider: google
-    map_zoom: 19
-    home_zone: zone.home
-    api_key: !secret email_steve
-
-    
-
-
-
+ 
 mqtt:
   discovery: true
   broker: mqtt://192.168.0.119:1883
@@ -46,5 +37,18 @@ mqtt:
  #   topic: 'hass/status'
   #  payload: 'offline'
 
-
+alarm_control_panel:
+  - platform: manual
+    name: Home Alarm
+    code: '1234'
+    arming_time: 15
+    delay_time: 30
+    trigger_time: 15
+    disarmed:
+      trigger_time: 0
+    armed_home:
+      arming_time: 0
+      delay_time: 0
+    
 esphome:
+

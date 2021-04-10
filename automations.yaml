@@ -1,13 +1,159 @@
-- id: '1608500474114'
-  alias: test
+- id: '1612738463074'
+  alias: Boost notification
   description: ''
   trigger:
-  - platform: time
-    at: '21:44'
+  - platform: state
+    entity_id: sensor.home_boost
+    to: 'ON'
+    for: 00:32:00
   condition: []
   action:
-  - type: turn_off
-    device_id: e10f12991d6011eb998ce732ae9912b9
-    entity_id: light.fish_tank_light
-    domain: light
+  - service: notify.mobile_app_steve_mobile
+    data:
+      title: Boost
+      message: Boost has been on for a while
+  mode: single
+- id: '1612738614268'
+  alias: zigbee2mqtt IKEA 5-button remote
+  description: ''
+  use_blueprint:
+    path: fich/zigbee2mqtt-ikea-5-button-remote-general-use.yaml
+    input:
+      remote: sensor.ikea_button_action
+      button_on_off:
+      - scene: scene.bedtime
+      button_brightness_up_short:
+      - type: brightness_increase
+        device_id: 15810c022453dbf936077c92b53127fa
+        entity_id: light.room_lamp
+        domain: light
+      button_brightness_down_short:
+      - type: brightness_decrease
+        device_id: 15810c022453dbf936077c92b53127fa
+        entity_id: light.room_lamp
+        domain: light
+- id: '1612739510371'
+  alias: Alarm ON
+  description: Turns HA alarm on when home alarm is part set
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.part_set_satus
+    to: 'off'
+  condition: []
+  action:
+  - service: alarm_control_panel.alarm_arm_home
+    entity_id: alarm_control_panel.home_alarm
+    data:
+      code: 1234
+  mode: single
+- id: '1612773225528'
+  alias: Nathans Awake
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.pir1
+    to: 'on'
+  condition: []
+  action:
+  - service: notify.mobile_app_steve_mobile
+    data:
+      title: Alert
+      message: Nathans awake
+  mode: single
+- id: '1612907888637'
+  alias: Alarm OFF
+  description: Turns HA alarm on when home alarm is part set
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.part_set_satus
+    to: 'on'
+  condition: []
+  action:
+  - service: alarm_control_panel.alarm_disarm
+    entity_id: alarm_control_panel.home_alarm
+    data:
+      code: 1234
+  mode: single
+- id: '1613948161599'
+  alias: Chesters Humidity
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.chester_humidity_2
+    below: '65'
+  condition:
+  - condition: time
+    after: '11:00'
+    before: '18:00'
+  action:
+  - service: notify.mobile_app_steve_mobile
+    data:
+      title: Chester
+      message: Chesters Humidity is below 79%
+  - service: notify.mobile_app_sara_mobile
+    data:
+      title: Chester
+      message: Chesters Humidity is below 79%
+  mode: single
+- id: '1614591241457'
+  alias: Notify if alarm has been unset
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.part_set_status_2
+    to: 'on'
+  condition:
+  - condition: time
+    after: 06:30
+    before: 07:00
+  action:
+  - service: notify.mobile_app_steve_mobile
+    data:
+      title: Alarm Notification
+      message: Alarm has been unset
+  mode: single
+- id: '1615799609466'
+  alias: Notify if relay has been set
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: switch.alarm_part_set_3
+    to: 'on'
+  condition: []
+  action:
+  - service: notify.mobile_app_steve_mobile
+    data:
+      title: Alarm Notification
+      message: Relay has turned on
+  mode: single
+- id: '1615881282404'
+  alias: Notify if alarm has been set
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.part_set_status_2
+    to: 'on'
+  condition:
+  - condition: time
+    before: 03:00
+    after: '22:00'
+  action:
+  - service: notify.mobile_app_steve_mobile
+    data:
+      title: Alarm Notification
+      message: Alarm has been set
+  mode: single
+- id: '1617961448390'
+  alias: Notify if pir changed in kitchen
+  description: ''
+  trigger:
+  - platform: state
+    to: 'on'
+    entity_id: binary_sensor.kitchen_selfmon
+  condition: []
+  action:
+  - service: notify.mobile_app_steve_mobile
+    data:
+      title: Alarm Notification
+      message: kitchen
   mode: single
