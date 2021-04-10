@@ -1,0 +1,144 @@
+- id: '1610899144747'
+  name: Bedtime
+  entities:
+    media_player.sony_bravia_tv:
+      source_list:
+      - HDMI 1/MHL
+      - HDMI 2
+      - HDMI 3
+      - HDMI 4/ARC
+      - AV 1
+      - AV 2/Component
+      - Screen mirroring
+      - BBC ONE N West
+      - BBC TWO
+      - ITV
+      - Channel 4
+      - Channel 5
+      - ITV2
+      - BBC FOUR
+      - ITV3
+      - Channel 4+1
+      - More 4
+      - Film4
+      - ITV4
+      - BBC ONE HD
+      - BBC TWO HD
+      - ITV HD
+      - Channel 4 HD
+      - Channel 5 HD
+      - BBC Manchester
+      - E4
+      - Play Store
+      - YouTube
+      - Peacock TV
+      - Prime Video
+      - Play Movies
+      - Netflix
+      - TiviMate
+      - Filelinked
+      - ES File Explorer Pro
+      - MX Player
+      - Perfect Player
+      - BeeTV
+      - Windscribe
+      - Send Files To TV
+      - CinemaHD
+      - DigibitVPN
+      - BBC iPlayer
+      - ITV Player
+      - All 4
+      friendly_name: Sony Bravia TV
+      supported_features: 23997
+      device_class: tv
+      state: 'off'
+    light.hallway_lamp:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      brightness: 92
+      linkquality: 102
+      state: 'off'
+      update:
+        state: available
+      update_available: true
+      friendly_name: Hallway Lamp
+      icon: mdi:lamp
+      supported_features: 45
+    light.porch:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      linkquality: 36
+      state: 'off'
+      update:
+        state: available
+      update_available: true
+      friendly_name: Porch
+      supported_features: 45
+    light.kitchen_lamp:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      brightness: 250
+      linkquality: 102
+      state: 'off'
+      update:
+        state: available
+      update_available: true
+      friendly_name: Kitchen Lamp
+      supported_features: 45
+    light.room_lamp:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      brightness: 115
+      linkquality: 102
+      state: 'off'
+      update:
+        state: available
+      update_available: true
+      friendly_name: Room Lamp
+      supported_features: 45
+    light.sideboard:
+      friendly_name: Sideboard
+      icon: mdi:led-strip-variant
+      supported_features: 185
+      state: 'off'
+    light.kitchen_led:
+      friendly_name: Kitchen LED
+      icon: mdi:led-strip-variant
+      supported_features: 185
+      state: unavailable
+    media_player.kitchen_display:
+      friendly_name: Kitchen display
+      supported_features: 152461
+      state: 'off'
+    light.dining_room:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      linkquality: 102
+      state: 'off'
+      friendly_name: Dining Room
+      supported_features: 45

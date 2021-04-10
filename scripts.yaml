@@ -1,0 +1,30 @@
+boost:
+  alias: Boost Heating 30 mins
+  sequence:
+  - service: hive.boost_heating
+    data:
+      entity_id: climate.home
+      time_period: 00:30:00
+      temperature: '20'
+  mode: single
+  icon: mdi:fire
+'1611181589757':
+  alias: Boost Heating 45 mins
+  sequence:
+  - service: hive.boost_heating
+    data:
+      entity_id: climate.home
+      time_period: 00:45:00
+      temperature: '20'
+  mode: single
+  icon: mdi:fire
+'1611181628914':
+  alias: Boost Heating 60 mins
+  sequence:
+  - service: hive.boost_heating
+    data:
+      entity_id: climate.home
+      time_period: 00:60:00
+      temperature: '20'
+  mode: single
+  icon: mdi:fire

@@ -26,7 +26,7 @@ binary_sensor: !include_dir_merge_list binary_sensors/
  
 mqtt:
   discovery: true
-  broker: mqtt://MYIP:1883
+  broker: mqtt://192.168.0.119:1883
  # birth_message and will_message is not required anymore for Home Assistant 0.113 >=
  # birth_message:
  #   topic: 'hass/status'
