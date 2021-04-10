@@ -1,6 +1,6 @@
 - platform: mqtt
   device_class: motion
-  state_topic: "selfmon/vmod.010faa/prio/inputs/read/1001"
+  state_topic: "selfmon/vmod/prio/inputs/read/1001"
   name: "Kitchen selfmon"
   off_delay: 2
   payload_on: "OPEN"
@@ -8,7 +8,7 @@
   
 - platform: mqtt
   device_class: motion
-  state_topic: "selfmon/vmod.010faa/prio/inputs/read/1002"
+  state_topic: "selfmon/vmod/prio/inputs/read/1002"
   name: "Dining room selfmon"
   off_delay: 2
   payload_on: "OPEN"
@@ -17,7 +17,7 @@
   
 - platform: mqtt
   device_class: motion
-  state_topic: "selfmon/vmod.010faa/prio/inputs/read/1003"
+  state_topic: "selfmon/vmod/prio/inputs/read/1003"
   name: "Living Room selfmon"
   off_delay: 2
   payload_on: "OPEN"
@@ -25,7 +25,7 @@
   
 - platform: mqtt
   device_class: motion
-  state_topic: "selfmon/vmod.010faa/prio/inputs/read/1004"
+  state_topic: "selfmon/vmod/prio/inputs/read/1004"
   name: "Upstairs selfmon"
   off_delay: 2
   payload_on: "OPEN"
@@ -33,7 +33,7 @@
   
 - platform: mqtt
   device_class: motion
-  state_topic: "selfmon/vmod.010faa/prio/inputs/read/1011"
+  state_topic: "selfmon/vmod/prio/inputs/read/1011"
   name: "Hall selfmon"
   off_delay: 2
   payload_on: "OPEN"
@@ -41,28 +41,28 @@
   
 - platform: mqtt
   device_class: door
-  state_topic: "selfmon/vmod.010faa/prio/inputs/read/1012"
+  state_topic: "selfmon/vmod/prio/inputs/read/1012"
   name: "Shed Door selfmon"
   payload_on: "OPEN"
   payload_off: "CLOSED"
   
 - platform: mqtt
   device_class: door
-  state_topic: "selfmon/vmod.010faa/prio/inputs/read/1013"
+  state_topic: "selfmon/vmod/prio/inputs/read/1013"
   name: "Back Door selfmon"
   payload_on: "OPEN"
   payload_off: "CLOSED"
   
 - platform: mqtt
   device_class: door
-  state_topic: "selfmon/vmod.010faa/prio/inputs/read/1014"
+  state_topic: "selfmon/vmod/prio/inputs/read/1014"
   name: "Front Door selfmon"
   payload_on: "OPEN"
   payload_off: "CLOSED"
   
 - platform: mqtt
   device_class: motion
-  state_topic: "selfmon/vmod.010faa/prio/inputs/read/1021"
+  state_topic: "selfmon/vmod/prio/inputs/read/1021"
   name: "Shed Pir selfmon"
   off_delay: 2
   payload_on: "OPEN"
