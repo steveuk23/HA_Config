@@ -22,7 +22,6 @@ script: !include scripts.yaml
 #sensor: !include yamls/sensor.yaml
 sensor: !include_dir_merge_list sensors/
 scene: !include scenes.yaml
-#binary_sensor: !include /yamls/binary_sensor.yaml
 binary_sensor: !include_dir_merge_list binary_sensors/
 
  
