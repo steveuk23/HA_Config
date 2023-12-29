@@ -1,0 +1,29 @@
+type: custom:mod-card
+card:
+  type: custom:html-template-card
+  ignore_line_breaks: true
+  content: |
+    {% set state = states('sensor.time') %}
+    {% if '00:00' <= state < '06:00' %}
+      Good Night sleep tight !
+    {% elif '06:00' <= state < '12:00' %}
+      Good Morning today will be a good day :)
+    {% elif '12:00' <= state < '18:00' %}
+      Good Afternoon hope you've had a good day
+    {% else %}
+      Good Evening Steve
+    {% endif %} 
+card_mod:
+  style: |
+    :host {
+      top: 30%;
+      left: 50%;
+      width: 100%;
+    }
+    ha-card {
+      border: none !important;
+      font-size: 24px;
+      color: grey;
+      text-align: left;
+      line-height: 1.2;
+    }

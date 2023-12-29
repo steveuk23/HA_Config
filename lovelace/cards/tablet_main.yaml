@@ -1,0 +1,711 @@
+type: vertical-stack
+
+    #################################################################
+    #                                                               #
+    #                      TABLET MAIN SCREEN                       #
+    #                                                               #
+    #################################################################
+
+
+view_layout:
+  grid-area: main1
+cards:
+  - type: horizontal-stack
+    cards:
+      - type: custom:button-card
+        entity: group.room_lights
+        color: auto
+        show_state: false
+        show_name: true
+        name: Lights
+        tap_action:
+          action: toggle
+        icon: mdi:lightbulb-group-outline
+        size: 250px
+        styles:
+          card:
+            - border: solid 2px black
+            #- box-shadow: 0px 0px 9px 3px grey
+            - font-size: 15px
+            - filter: opacity(100%)
+            - text-shadow: 0px 0px 5px black
+            - height: 100px
+            - padding-bottom: 8px
+          name:
+            - font-size: 13px
+        state:
+          - value: 'on'
+            styles:
+              card:
+                - filter: opacity(100%)
+              icon:
+                - color: rgb(100,100,255)
+      - type: custom:button-card
+        entity: sensor.flex_status
+        show_entity_picture: true
+        size: 54%
+        show_state: true
+        show_name: false
+        name: Alarm
+        tap_action:
+          action: none
+        styles:
+          card:
+            - font-size: 15px
+            - border: solid 2px black
+            #- box-shadow: 0px 0px 9px 3px grey
+            - filter: opacity(100%)
+            - text-shadow: 0px 0px 5px black
+            - padding-bottom: 8px
+            - height: 100px
+          name:
+            - font-size: 16px
+        state:
+          - operator: template
+            value: >
+              [[[return (states["sensor.flex_status"].state === 'Part
+              Set')]]]
+            entity_picture: /local/images/icon/part.png
+            styles:
+              icon:
+                - color: rgb(255,119,0)
+          - operator: template
+            value: >
+              [[[return (states["sensor.flex_status"].state ===
+              'Unset')]]]
+            entity_picture: /local/images/icon/unset.png
+            styles:
+              card:
+                - filter: opacity(100%)
+              icon:
+                - color: rgb(30,179,0)
+          - operator: template
+            value: >
+              [[[return (states["sensor.flex_status"].state ===
+              'Set')]]]
+            entity_picture: /local/images/icon/full.png
+            styles:
+              card:
+                - filter: opacity(100%)
+              icon:
+                - color: rgb(255,119,0)
+      - type: custom:button-card
+        show_entity_picture: true
+        entity_picture: /local/images/icon/bedtime.png
+        tap_action:
+          action: toggle
+          confirmation: true
+        entity: input_boolean.bedtime
+        name: Bedtime
+        styles:
+          card:
+            - font-size: 15px
+            - border: solid 2px black
+            #- box-shadow: 0px 0px 9px 3px grey
+            - filter: opacity(100%)
+            - text-shadow: 0px 0px 5px black
+            - padding-bottom: 8px
+            - height: 100px
+        icon: mdi:weather-night
+        state:
+          - value: 'on'
+            styles:
+              card:
+                - filter: opacity(100%)
+              icon:
+                - color: rgb(100,100,255)
+ 
+  - type: vertical-stack
+    cards:
+      - type: custom:swipe-card
+        card_width: 250px
+        start_card: 3
+        parameters:
+          effect: coverflow
+          grabCursor: true
+          centeredSlides: true
+          setWrapperSize: true
+          slideToClickedSlide: true
+          slidesPerView: auto
+          slideShadows: true
+          coverflowEffect:
+            rotate: 5
+            stretch: -5
+            depth: 150
+            modifier: 3
+            slideShadows: true
+          pagination:
+            type: none
+        style:
+          left: 50%
+          top: 65%
+          width: 96%
+          opacity: 100%
+          
+# SLIDER CARDS SECURITY #          
+        cards:
+          - type: custom:button-card
+            entity: sensor.flex_status
+            name: Security
+            show_entity_picture: true
+            entity_picture: /local/images/icon/unset.png
+            tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.menu_select
+                option: security
+            double_tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.menu_select
+                option: blank
+            state:
+              - operator: template
+                value: >
+                  [[[return (states["sensor.flex_status"].state ===
+                  'Unset')]]]
+                entity_picture: /local/images/icon/unset.png
+              - operator: template
+                value: >
+                  [[[return (states["sensor.flex_status"].state ===
+                  'Part Set')]]]
+                entity_picture: /local/images/icon/part.png
+              - operator: template
+                value: >
+                  [[[return (states["sensor.flex_status"].state ===
+                  'Set')]]]
+                entity_picture: /local/images/icon/full.png
+            styles:
+              card:
+                - height: 150px
+                - padding: 4%
+                - width: 250px
+                - background-image: url(/local/images/button.png)
+                - background-size: cover
+                - border-radius: 25px
+                - border-width: 2px
+                - border-color: black
+                - border-style: solid
+                
+# SLIDER CARDS LIGHTS #                
+          - type: custom:button-card
+            entity: group.room_lights
+            name: Lights
+            icon: mdi:lightbulb-group-outline
+            state:
+              - value: 'on'
+                styles:
+                  card:
+                    - filter: opacity(100%)
+                  icon:
+                    - color: rgb(100,100,255)
+            tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.menu_select
+                option: lights
+            double_tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.menu_select
+                option: blank
+            styles:
+              card:
+                - height: 150px
+                - padding: 4%
+                - width: 250px
+                - background-image: url(/local/images/button.png)
+                - background-size: cover
+                - opacity: null
+                - border-radius: 25px
+                - border-width: 2px
+                - border-color: black
+                - border-style: solid
+                
+# SLIDER CARDS HEATING #                
+          - type: custom:button-card
+            entity: climate.hive_receiver
+            name: Heating
+            entity_picture: /local/images/icon/radiator.png
+            show_entity_picture: true
+            state:
+              - operator: template
+                value: >
+                  [[[return (states["sensor.running_state"].state ===
+                  'emergency_heating')]]]
+                styles:
+                  icon:
+                    - color: rgb(255,119,0)
+            styles:
+              card:
+                - height: 150px
+                - padding: 4%
+                - width: 250px
+                - background-image: url(/local/images/button.png)
+                - background-size: cover
+                - border-radius: 25px
+                - border-width: 2px
+                - border-color: black
+                - border-style: solid
+            tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.menu_select
+                option: climate
+            double_tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.menu_select
+                option: blank
+                
+# SLIDER CARDS MEDIA #                
+          - type: custom:button-card
+            entity: media_player.kitchen_display
+            name: Media
+            show_entity_picture: true
+            entity_picture: /local/images/icon/cast.png
+            tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.menu_select
+                option: media
+            double_tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.menu_select
+                option: blank
+            styles:
+              card:
+                - height: 160px
+                - padding: 4%
+                - width: 250px
+                - background-image: url(/local/images/button.png)
+                - background-size: cover
+                - border-radius: 25px
+                - border-width: 2px
+                - border-color: black
+                - border-style: solid
+
+# CONDITIONAL CARDS #
+# CONDITIONAL LIGHTS #
+      - type: conditional
+        conditions:
+          - entity: input_select.menu_select
+            state: lights
+        card:
+          type: conditional
+          conditions:
+            - entity: input_select.menu_select
+              state: lights
+          card:
+            type: entities
+            style: |
+              ha-card {
+              border: solid 2px black; box-shadow: none;
+              } 
+            title: Lights
+            show_header_toggle: false
+            entities:
+              - entities:
+                  - light.room_lamp
+                  - light.cabinet_leds
+                  - light.tv_leds
+                  - light.dining_room_lamp
+                head: group.room_lights
+                type: custom:fold-entity-row
+              - entities:
+                  - light.kitchen_lamp
+                  - light.kitchen_leds
+                head: group.kitchen
+                type: custom:fold-entity-row
+              - entities:
+                  - light.steves_lamp
+                  - light.saras_lamp
+                  - light.sara_leds
+                head: group.bedroom_lamps
+                type: custom:fold-entity-row
+              - entities:
+                  - light.saras_lamp
+                  - light.steves_lamp
+                  - light.sara_leds
+                  - light.carrises_leds
+                head: group.upstairs_lights
+                type: custom:fold-entity-row
+              - entities:
+                  - light.hallway_lamp
+                head: group.hallway_lights
+                type: custom:fold-entity-row
+              - entities:
+                  - light.porch
+                head: group.outside_lights
+                type: custom:fold-entity-row
+                
+# CONDITIONAL CLIMATE #                
+      - type: conditional
+        conditions:
+          - entity: input_select.menu_select
+            state: climate
+        card:
+          type: vertical-stack
+          cards:
+            - type: custom:simple-thermostat
+              entity: climate.hive_receiver
+              sensors:
+                - entity: sensor.boost_remaining
+                  name: Boost ends in
+              control: false
+              header:
+                name: Heating
+                icon: mdi:fire
+                toggle:
+                  entity: script.stop_boost
+                  name: Stop Boost
+              layout:
+                mode:
+                  icons: true
+                  names: true
+                  headings: true
+              step_size: '0.5'
+              style: |
+                ha-card {
+                border: solid 2px black; box-shadow: none;
+                } 
+            - type: horizontal-stack
+              cards:
+                - type: custom:button-card
+                  tap_action:
+                    action: toggle
+                  entity: script.boost
+                  styles:
+                    card:
+                      - border-width: 2px
+                      - border-color: black
+                      - border-style: solid
+                  icon: mdi:fire
+                  name: Boost 30
+                  state:
+                    - operator: template
+                      value: >
+                        [[[return (states["timer.boost_30"].state ===
+                        'active')]]]
+                      styles:
+                        icon:
+                          - color: rgb(255,119,0)
+                          - animation: blink 1.5s ease infinite
+                  style: |
+                    ha-card:hover {
+                      box-shadow: 0 0 10px;
+                      border: solid 1px black;
+                      }
+                - type: custom:button-card
+                  tap_action:
+                    action: toggle
+                  entity: script.1611181589757
+                  icon: mdi:fire
+                  styles:
+                    card:
+                      - border-width: 2px
+                      - border-color: black
+                      - border-style: solid
+                  name: Boost 45
+                  state:
+                    - operator: template
+                      value: >
+                        [[[return (states["timer.boost_45"].state ===
+                        'active')]]]
+                      styles:
+                        icon:
+                          - color: rgb(255,119,0)
+                          - animation: blink 1.5s ease infinite
+                  style: |
+                    ha-card:hover {
+                      box-shadow: 0 0 10px;
+                      }
+                - type: custom:button-card
+                  tap_action:
+                    action: toggle
+                  entity: script.1611181628914
+                  styles:
+                    card:
+                      - border-width: 2px
+                      - border-color: black
+                      - border-style: solid
+                  icon: mdi:fire
+                  name: Boost 60
+                  state:
+                    - operator: template
+                      value: >
+                        [[[return (states["timer.boost_60"].state ===
+                        'active')]]]
+                      styles:
+                        icon:
+                          - color: rgb(255,119,0)
+                          - animation: blink 1.5s ease infinite
+                  style: |
+                    ha-card:hover {
+                      box-shadow: 0 0 10px;
+                      }
+# CONDITIONAL SECURITY #                      
+      - type: conditional
+        conditions:
+          - entity: input_select.menu_select
+            state: security
+        card:
+          type: custom:stack-in-card
+          mode: vertical
+          style: |
+              ha-card {
+              border: none; box-shadow: none;
+              }
+          cards:
+            - type: custom:stack-in-card
+              mode: horizontal
+              style: |
+                ha-card {
+                border: solid 2px black; box-shadow: none;
+                } 
+              cards:
+                - type: custom:button-card
+                  entity: sensor.flex_status
+                  show_entity_picture: true
+                  entity_picture: /local/images/icon/unset.png
+                  aspect_ratio: 2.2/2
+                  size: 70%
+                  name: Alarm
+                  show_name: false
+                  show_state: true
+                  styles:
+                    card:
+                      - font-size: 16px
+                      - height: 160px
+                      - margin-top: 20px
+                      - padding: 0px
+                      - border: none
+                  state:
+                    - operator: template
+                      value: >
+                        [[[return (states["sensor.flex_status"].state
+                        === 'Part Set')]]]
+                      entity_picture: /local/images/icon/part.png
+                    - operator: template
+                      value: >
+                        [[[return (states["sensor.flex_status"].state
+                        === 'Set')]]]
+                      entity_picture: /local/images/icon/full.png
+                    - operator: template
+                      value: >
+                        [[[return (states["sensor.alarm_setting_status"].state
+                        === 'Setting')]]]
+                      entity_picture: /local/images/icon/part.png
+                      styles:
+                        entity_picture:
+                          - animation: blink 1s linear infinite
+                - type: custom:stack-in-card
+                  mode: vertical
+                  keep:
+                    box_shadow: false
+                    margin: true
+                    border_radius: false
+                    outer_padding: false
+                  style: |
+                    ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                    }
+                  cards:
+                    - type: custom:button-card
+                      entity: sensor.intrusion_status
+                      label: Intruder
+                      show_entity_picture: true
+                      show_label: true
+                      show_name: false
+                      layout: icon_label
+                      size: 35px
+                      state:
+                        - value: ''
+                          entity_picture: /local/images/icon/tick.png
+                          styles:
+                            icon:
+                              - color: green
+                        - value: Intrusion Detected
+                          entity_picture: /local/images/icon/alert.png
+                          styles:
+                            entity_picture:
+                              - animation: blink 1s linear infinite
+                      styles:
+                        card:
+                          - padding: 0px 0px 5px 0px
+                          - font-size: 16px
+                          - border: none
+                        label:
+                          - justify-self: start
+                    - type: custom:button-card
+                      entity: sensor.tamper_status
+                      show_entity_picture: true
+                      label: Tamper
+                      show_label: true
+                      show_name: false
+                      layout: icon_label
+                      size: 35px
+                      state:
+                        - value: ''
+                          entity_picture: /local/images/icon/tick.png
+                          styles:
+                            icon:
+                              - color: green
+                        - value: Tamper
+                          entity_picture: /local/images/icon/alert.png
+                          styles:
+                            entity_picture:
+                              - animation: blink 1s linear infinite
+                      styles:
+                        card:
+                          - padding: 0px 0px 5px 0px
+                          - font-size: 16px
+                          - border: none
+                        label:
+                          - justify-self: start
+                    - type: custom:button-card
+                      entity: sensor.alarm_setting_status
+                      label: Setting
+                      show_entity_picture: true
+                      show_label: true
+                      show_name: false
+                      layout: icon_label
+                      size: 35px
+                      state:
+                        - value: ''
+                          entity_picture: /local/images/icon/tick.png
+                        - value: Setting
+                          entity_picture: /local/images/icon/tick.png
+                          styles:
+                            entity_picture:
+                              - animation: blink 1s linear 10
+                      styles:
+                        card:
+                          - padding: 0px 0px 5px 0px
+                          - font-size: 16px
+                          - border: none
+                        label:
+                          - justify-self: start
+                    - type: custom:button-card
+                      entity: switch.smoke
+                      show_entity_picture: true
+                      label: Smoke
+                      show_label: true
+                      show_name: false
+                      layout: icon_label
+                      size: 35px
+                      state:
+                        - value: 'off'
+                          entity_picture: /local/images/icon/tick.png
+                        - value: 'on'
+                          entity_picture: /local/images/icon/alert.png
+                          styles:
+                            entity_picture:
+                              - animation: blink 1s linear 10
+                      styles:
+                        card:
+                          - padding: 0px 0px 5px 0px
+                          - font-size: 16px
+                          - border: none
+                        label:
+                          - justify-self: start
+            - type: custom:stack-in-card
+              mode: horizontal
+              box_shadow: false
+              style: |
+                ha-card {
+                border: solid 2px black; box-shadow: none;
+                } 
+              cards:
+                - type: custom:button-card
+                  entity: sensor.galaxy_group_1
+                  icon: mdi:lock
+                  name: Full Set
+                  color: red
+                  styles:
+                    card:
+                      - height: 110px
+                      - padding: 15px
+                      - border: none
+                - type: custom:button-card
+                  entity: sensor.galaxy_group_1
+                  name: Part Set
+                  tap_action:
+                    action: call-service
+                    service: mqtt.publish
+                    service_data:
+                      payload: !secret alarm
+                      topic: selfmon/vmod.010faa/vkp/key
+                  color: orange
+                  icon: mdi:shield-half-full
+                  styles:
+                    card:
+                      - height: 110px
+                      - padding: 15px
+                      - font-size: 15px
+                      - border: none
+                - type: custom:button-card
+                  entity: sensor.galaxy_group_1
+                  name: Unset
+                  color: green
+                  icon: mdi:lock-open
+                  styles:
+                    card:
+                      - height: 110px
+                      - padding: 15px
+                      - border: none
+                      
+# CONDITIONAL MEDIA #                      
+      - type: conditional
+        conditions:
+          - entity: input_select.menu_select
+            state: media
+        card:
+          type: entities
+          entities:
+            - entity: media_player.bedroom_display
+              name: Google Nest bedroom
+            - entity: media_player.kitchen_display
+              name: Google Nest kitchen
+            - entity: media_player.sony_tv
+              name: Sony TV
+            - entity: media_player.google_tv
+              name: Google Tv downstairs
+            - entity: media_player.bedroom_google_tv
+              name: Google Tv bedroom
+            - entity: media_player.carrises_bedroom_speaker
+              name: Carrise's Google 
+            - entity: media_player.living_room_dot
+              name: Living Room Alexa
+            - entity: media_player.nathan
+              name: Nathans Alexa
+          style: |
+            ha-card {
+            border: solid 2px black; box-shadow: none;
+             } 
+# CONDITIONAL BLANK #             
+      - type: conditional
+        conditions:
+          - entity: input_select.menu_select
+            state: blank
+        card:
+          type: custom:button-card
+          show_name: false
+          show_icon: false
+          styles:
+            card:
+              - height: 1px
+              - background: none
+              - box-shadow: none
+              - border: none

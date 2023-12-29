@@ -1,0 +1,264 @@
+media_card_speaker:
+  card:
+    type: picture-elements
+    image: local/images/overlay.svg
+    card_mod:
+      style: |
+        ha-card {
+          --ha-card-background: none !important;
+          border-style: none !important;
+          # box-shadow: none !important;
+        }                          
+    elements:
+      - aspect_ratio: 1/1
+        type: 'custom:button-card'
+        entity: '[[entity]]'
+        show_icon: false
+        show_label: false
+        show_last_changed: false
+        show_entity_picture: true
+        show_name: false
+        show_state: false
+        tap_action:
+          action: none
+        style:
+          height: 100%
+          width: 100%
+          top: 50%
+          left: 50%
+        state:
+          - styles:
+              entity_picture:
+                - filter: grayscale(100%) blur(17px)
+                - transition: all 0.5s ease
+            value: paused
+          - styles:
+              entity_picture:
+                - filter: grayscale(100%) blur(17px)
+                - transition: all 0.5s ease
+            value: idle        
+        styles:
+          card:
+            - padding: 0px
+            - background-color: var(--card-background-off) #the color when there is no artwork, change or remove to use own color
+            - box-shadow: none
+            - -webkit-box-shadow: none      
+            - border: solid 2px black
+          entity_picture:
+            - height: 110%
+            - width: 110%
+            - position: absolute
+            - transition: all 0.5s ease
+            - filter: blur(8px)
+
+      - type: 'custom:mod-card'
+        style:
+          '--mini-media-player-icon-color': var(--text-color) #change or remove to use own color
+          '--mini-media-player-base-color': var(--text-color) #change or remove to use own color
+          '--mini-media-player-accent-color': var(--accent-color) #change or remove to use own color
+          border-top-left-radius: 0px !important
+          border-top-right-radius: 0px !important      
+          width: 100%
+          transform: 'translate(0%, -100%)'
+          border-style: none
+          border-color: (0,0,0,0.0)
+        card:
+          type: 'custom:mini-media-player'
+          artwork: none
+          entity: '[[entity]]'
+          group: false
+          icon: 'mdi:speaker'
+          hide:
+            controls: true
+            icon: false
+            name: false
+            power: true
+            runtime: false
+            source: true
+            volume: true
+          hold_action:
+            action: none
+          tap_action:
+            action: none
+          info: scroll
+          source: true
+          card_mod:
+            style: |
+              .mmp-player {
+                 background: var(--mini-media-player-mmp) !important;
+                 border-top-left-radius: 0px !important;
+                 border-top-right-radius: 0px !important;
+                 border-style: none !important;
+                 border-color: rgba(0,0,0,0.0) !important;
+              }      
+              .entity__info {
+                max-width: 95% !important; #change this if you want the scrolling info to be wider/smaller
+              }       
+              ha-card {
+                border-style: none !important;
+              }
+              
+      - icon: 'mdi:chevron-right'
+        template: music_card_speaker_button
+        entity: '[[entity]]'
+        style:
+          right: '-7.5%'
+          top: 50%
+          height: 25%
+          width: 25%
+        tap_action:
+          action: call-service
+          service: media_player.media_next_track
+          service_data:
+            entity_id: '[[entity]]'
+          haptic: medium
+        hold_action:
+          action: none
+        type: 'custom:button-card'            
+      - icon: 'mdi:chevron-left'
+        template: music_card_speaker_button
+        entity: '[[entity]]'
+        style:
+          right: 57.5%
+          top: 50%
+          height: 25%
+          width: 25%
+        tap_action:
+          action: call-service
+          service: media_player.media_previous_track
+          service_data:
+            entity_id: '[[entity]]'
+          haptic: medium
+        hold_action:
+          action: none
+        type: 'custom:button-card'            
+      - icon: 'mdi:pause-circle'
+        aspect_ratio: 1/1
+        show_name: false
+        show_icon: false
+        show_entity_picture: true
+        size: 100%
+        entity: '[[entity]]'
+        style:
+          right: 10%
+          top: 50%
+          height: 40%
+          width: 40%
+        styles:
+          card:
+            - background: none
+            - padding: 0
+            - border-radius: 50%
+            - border: 2px solid rgba(255,255,255,0.8)
+            - box-shadow: 2px 4px 4px rgba(0,0,0,0.7)
+          img_cell:
+            - border-radius: 50%
+            - place-self: center 
+        tap_action:
+          action: call-service
+          service: media_player.media_play_pause
+          service_data:
+            entity_id: '[[entity]]'
+          haptic: medium
+        hold_action:
+          action: none
+        type: 'custom:button-card'
+      - icon: 'mdi:close-circle'
+        template: music_card_speaker_button
+        entity: '[[entity]]'
+        style:
+          right: 35%
+          top: 15%
+          height: 15%
+          width: 15%
+        tap_action:
+          action: call-service
+          service: media_player.volume_mute
+          service_data:
+            is_volume_muted: >
+              [[[ if (entity.attributes.is_volume_muted == false) return 'true'; return
+              'false' ]]]
+            entity_id: '[[entity]]'
+          haptic: medium          
+        hold_action:
+          action: none     
+        type: 'custom:button-card'            
+      - icon: 'mdi:minus-circle'
+        template: music_card_speaker_button
+        entity: '[[entity]]'
+        style:
+          right: 60%
+          top: 25%
+          height: 15%
+          width: 15%
+        tap_action:
+          action: call-service
+          service: media_player.volume_set
+          service_data:
+            volume_level: "[[[ return entity.attributes.volume_level - 0.020 ]]]"
+            entity_id: '[[entity]]'
+          haptic: medium       
+        hold_action:
+          action: call-service
+          service: media_player.volume_set
+          service_data:
+            volume_level: "[[[ return entity.attributes.volume_level - 0.020 ]]]"
+            entity_id: '[[entity]]'
+          haptic: medium       
+          repeat: 300
+        type: 'custom:button-card'            
+      - icon: 'mdi:plus-circle'
+        template: music_card_speaker_button
+        entity: '[[entity]]'
+        style:
+          left: 75%
+          top: 25%
+          height: 15%
+          width: 15%
+        tap_action:
+          action: call-service
+          service: media_player.volume_set
+          service_data:
+            volume_level: "[[[ return entity.attributes.volume_level + 0.020 ]]]"
+            entity_id: '[[entity]]'
+          haptic: medium          
+        hold_action:
+          action: call-service
+          service: media_player.volume_set
+          service_data:
+            volume_level: "[[[ return entity.attributes.volume_level + 0.020 ]]]"
+            entity_id: '[[entity]]'
+          haptic: medium          
+          repeat: 300
+        type: 'custom:button-card'            
+      - icon: 'mdi:power-standby'
+        template: music_card_speaker_button
+        entity: '[[entity]]'
+        style:
+          right: 80%
+          top: 10%
+          height: 10%
+          width: 10%
+        tap_action:
+          action: call-service
+          service: media_player.toggle
+          service_data:
+            entity_id: '[[entity]]'
+          haptic: medium
+        hold_action:
+          action: none
+        type: 'custom:button-card'                
+      - icon: 'mdi:dots-vertical'
+        entity: '[[entity]]'
+        template: music_card_speaker_button
+        style:
+          left: 90%
+          top: 10%
+          height: 10%
+          width: 10%
+        tap_action:
+          haptic: medium
+          action: more-info   
+        hold_action:
+          action: none
+        type: 'custom:button-card'

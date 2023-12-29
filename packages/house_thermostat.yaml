@@ -1,0 +1,213 @@
+## /config/packages/house_thermostat.yaml
+## Hive Thermostat 
+
+# Switch for frontend to toggle heat/off - with both system_mode and heating_setpoint_hold
+switch:
+  - platform: template
+    switches:
+      thermostat_mode:
+        value_template: "{{ is_state('climate.hive_receiver','heat') }}"
+        turn_on:
+          service: mqtt.publish
+          data:
+            topic: zigbee2mqtt/hive_receiver/set
+            payload: '{ "system_mode":"heat", "temperature_setpoint_hold":"1" }'
+        turn_off:
+          service: mqtt.publish
+          data:
+            topic: zigbee2mqtt/hive_receiver/set
+            payload: '{ "system_mode":"off", "temperature_setpoint_hold":"0" }'
+        icon_template: >
+          {% if is_state('climate.hive_receiver','heat') %}
+            mdi:fire
+          {% elif is_state('climate.hive_receiver','off') %}
+            mdi:power
+          {% else %}
+            mdi:alert
+          {% endif %}
+
+# Adds a temperature sensor to HA from the thermostat temperature
+template:
+  - sensor:
+      name: current_temperature
+      unique_id: current_temperature
+      icon: mdi:thermometer
+      state: "{{ state_attr('climate.hive_receiver','local_temperature') }}"
+      state_class: measurement
+      unit_of_measurement: °C
+      device_class: temperature
+
+# Scheduling - input times to change temperature
+
+
+# Sheduling - corresponding input temperatures for each input time
+input_number:
+  thermtemp_01:
+    name: Thermostat Temperature 1
+    icon: mdi:numeric-1-circle-outline
+    min: 10
+    max: 21
+    step: 0.5
+  thermtemp_02:
+    name: Thermostat Temperature 2
+    icon: mdi:numeric-2-circle-outline
+    min: 10
+    max: 21
+    step: 0.5
+  thermtemp_03:
+    name: Thermostat Temperature 3
+    icon: mdi:numeric-3-circle-outline
+    min: 10
+    max: 21
+    step: 0.5
+  thermtemp_04:
+    name: Thermostat Temperature 4
+    icon: mdi:numeric-4-circle-outline
+    min: 10
+    max: 21
+    step: 0.5
+  thermtemp_05:
+    name: Thermostat Temperature 5
+    icon: mdi:numeric-5-circle-outline
+    min: 10
+    max: 21
+    step: 0.5
+  thermtemp_06:
+    name: Thermostat Temperature 6
+    icon: mdi:numeric-1-circle-outline
+    min: 10
+    max: 21
+    step: 0.5
+    
+input_datetime:
+  thermsched_01:
+    name: "Thermostat Schedule 1"
+    icon: "mdi:numeric-1-circle-outline"
+    has_time: true
+  thermsched_02:
+    name: "Thermostat Schedule 2"
+    icon: "mdi:numeric-2-circle-outline"
+    has_time: true
+  thermsched_03:
+    name: "Thermostat Schedule 3"
+    icon: "mdi:numeric-3-circle-outline"
+    has_time: true
+  thermsched_04:
+    name: "Thermostat Schedule 4"
+    icon: "mdi:numeric-4-circle-outline"
+    has_time: true
+  thermsched_05:
+    name: "Thermostat Schedule 5"
+    icon: "mdi:numeric-5-circle-outline"
+    has_time: true
+  thermsched_06:
+    name: "Thermostat Schedule 6"
+    icon: "mdi:numeric-6-circle-outline"
+    has_time: true
+
+# Automations
+automation:
+    # Scheduling automation - change temp at corresponding time
+  - id: house_thermostat_schedule
+    alias: House Thermostat Schedule
+    description: 'Sets house thermostat temperature based on input_datetimes and input_times'
+    trigger:
+      - platform: time
+        at: input_datetime.thermsched_01
+        id: '01'
+      - platform: time
+        id: '02'
+        at: input_datetime.thermsched_02
+      - platform: time
+        id: '03'
+        at: input_datetime.thermsched_03
+      - platform: time
+        id: '04'
+        at: input_datetime.thermsched_04
+      - platform: time
+        id: '05'
+        at: input_datetime.thermsched_05
+      - platform: time
+        id: '06'
+        at: input_datetime.thermsched_06
+
+    condition:
+      - condition: state
+        entity_id: climate.hive_receiver
+        state: heat
+    action:
+      - choose:
+          - conditions:
+              - condition: trigger
+                id: '01'
+            sequence:
+              - service: mqtt.publish
+                data:
+                  topic: zigbee2mqtt/hive_receiver/set
+                  payload: >-
+                    {"system_mode":"heat","temperature_setpoint_hold":"1","occupied_heating_setpoint":{{ states('input_number.thermtemp_01') }}}
+          - conditions:
+              - condition: trigger
+                id: '02'
+            sequence:
+              - service: mqtt.publish
+                data:
+                  topic: zigbee2mqtt/hive_receiver/set
+                  payload: >-
+                    {"system_mode":"heat","temperature_setpoint_hold":"1","occupied_heating_setpoint":{{ states('input_number.thermtemp_02') }}}
+          - conditions:
+              - condition: trigger
+                id: '03'
+            sequence:
+              - service: mqtt.publish
+                data:
+                  topic: zigbee2mqtt/hive_receiver/set
+                  payload: >-
+                    {"system_mode":"heat","temperature_setpoint_hold":"1","occupied_heating_setpoint":{{ states('input_number.thermtemp_03') }}}
+          - conditions:
+              - condition: trigger
+                id: '04'
+            sequence:
+              - service: mqtt.publish
+                data:
+                  topic: zigbee2mqtt/hive_receiver/set
+                  payload: >-
+                    {"system_mode":"heat","temperature_setpoint_hold":"1","occupied_heating_setpoint":{{ states('input_number.thermtemp_04') }}}
+          - conditions:
+              - condition: trigger
+                id: '05'
+            sequence:
+              - service: mqtt.publish
+                data:
+                  topic: zigbee2mqtt/hive_receiver/set
+                  payload: >-
+                    {"system_mode":"heat","temperature_setpoint_hold":"1","occupied_heating_setpoint":{{ states('input_number.thermtemp_05') }}}
+          - conditions:
+              - condition: trigger
+                id: '06'
+            sequence:
+              - service: mqtt.publish
+                data:
+                  topic: zigbee2mqtt/hive_receiver/set
+                  payload: >-
+                    {"system_mode":"heat","temperature_setpoint_hold":"1","occupied_heating_setpoint":{{ states('input_number.thermtemp_06') }}}
+
+        default: []
+    mode: single
+
+    # Fix accidental auto mode selection from the SLT - switch to heat mode.
+    # This makes sure the HA schedule is used instead of the SLT internal one.
+  - id: house_thermostat_auto_fix
+    alias: House Thermostat Auto Fix
+    description: 'Switches auto mode to heat mode. Maintains HA schedule rather than Hive schedule'
+    trigger:
+      - platform: state
+        entity_id: climate.hive_receiver
+        to: auto
+    condition: []
+    action:
+      - service: mqtt.publish
+        data:
+            topic: zigbee2mqtt/hive_receiver/set
+            payload: '{ "system_mode":"heat", "temperature_setpoint_hold":"1" }'
+    mode: single

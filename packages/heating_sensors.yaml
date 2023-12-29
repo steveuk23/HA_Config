@@ -1,0 +1,39 @@
+mqtt:
+  sensor:
+    - name: Target Temperature
+      unique_id: target_temperature
+      state_topic: "zigbee2mqtt/hive_receiver"
+      value_template: "{{value_json.occupied_heating_setpoint}}"
+      state_class: measurement
+      unit_of_measurement: °C
+      device_class: temperature
+      icon: mdi:thermometer
+      
+    - name: System Mode
+      unique_id: system_mode
+      state_topic: "zigbee2mqtt/hive_receiver"
+      value_template: "{{value_json.system_mode}}"
+      icon: mdi:radiator
+      
+    - name: Running State
+      unique_id: running_state
+      state_topic: "zigbee2mqtt/hive_receiver"
+      value_template: "{{value_json.running_state}}"
+      icon: mdi:radiator
+
+    - name: Boost Remaining
+      unique_id: boost_remaining
+      state_topic: "zigbee2mqtt/hive_receiver"
+      value_template: "{{value_json.temperature_setpoint_hold_duration}}"
+      icon: mdi:camera-timer
+
+
+
+
+  
+
+  
+
+  
+
+

@@ -1,0 +1,30 @@
+host: 192.168.1.24
+port: 8086
+database: homeassistant
+username: steve
+password: !secret influxdb_pass
+max_retries: 3
+default_measurement: state
+include:
+  entities:
+    - utility_meter.daily_energy
+    - utility_meter.weekly_energy
+    - utility_meter.monthly_energy
+    - sensor.energy_cost_today
+    - sensor.energy_cost_this_week
+    - sensor.energy_cost_this_month
+    - sensor.energy_monitor_channel_1_energy
+    - sensor.energy_monitor_channel_1_energy_cost
+    - sensor.energy_monitor_channel_1_power
+    - sensor.energy_monitor_channel_1_power_factor
+    - sensor.energy_monitor_channel_1_voltage
+    - sensor.energy_total_test
+    - sensor.daily_energy
+    - sensor.daily_energy_peak
+    - sensor.daily_energy_offpeak
+    - sensor.weekly_energy
+    - sensor.weekly_energy_offpeak
+    - sensor.weekly_energy_peak
+    - sensor.monthly_energy
+    - sensor.monthly_energy_offpeak
+    - sensor.monthly_energy_peak

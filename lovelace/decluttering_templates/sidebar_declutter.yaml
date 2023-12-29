@@ -1,0 +1,92 @@
+##########################    Icons for taking out the trash    ##########################
+
+icons:
+  element:
+    type: icon
+    icon: 'mdi:[[icon]]'
+    style:
+      '--mdc-icon-size': 1.4vw
+      color: '[[color]]'
+      align-items: center
+      background-color: 'rgba(255, 255, 255, 0.4)'
+      border-radius: 100%
+      display: flex
+      height: 2.1vw
+      justify-content: center
+      left: '[[left]]'
+      margin-left: '-1.5vw'
+      margin-top: '-1.5vw'
+      top: '[[top]]'
+      transform: scale(1.6)
+      width: 2.1vw
+    tap_action:
+      action: '[[action]]'
+      '[[type]]': '[[data]]'
+
+##########################    Icons for alerts   ##########################
+
+
+text:
+  element:
+    type: 'custom:text-element'
+    text: '[[text]]'
+    style:
+      color: '#ff1a1a'
+      top: '[[top]]'
+      left: '[[left]]'
+      font-size: 1vw
+      transform: translate(0%, 0%)
+
+statelabel:
+  element:
+    entity: '[[entity]]'
+    hold_action:
+      action: none
+    style:
+      color: '[[color]]'
+      font-size: '[[size]]'
+      font-weight: '[[weight]]'
+      left: '[[left]]'
+      letter-spacing: '-0.05vw'
+      top: '[[top]]'
+    tap_action:
+      action: '[[action]]'
+      '[[type]]': '[[data]]'
+    type: state-label
+
+#########################    People at home    #########################
+image:
+  element:
+    type: image
+    entity: '[[entity]]'
+    state_image:
+      "home": '/local/images/person/steve/[[imagehome]]'
+      "not_home": '/local/images/person/steve/[[imagehome]]'
+    style:
+      top: 67%
+      left: '[[left]]'
+      width: 4vw
+      height: 4vw
+      pointer-events: none
+      border-radius: 100%
+
+stateicon:
+  element:
+    type: state-icon
+    entity: '[[entity]]'
+    tap_action:
+      action: navigate
+      navigation_path: /lovelace-visual/systems
+    style:
+      '--mdc-icon-size': 1vw
+      '--paper-item-icon-color': lightgrey
+      align-items: center
+      display: flex
+      height: 2.1vw
+      justify-content: center
+      left: '[[left]]'
+      margin-left: '-1.5vw'
+      margin-top: '-1.5vw'
+      top: 71%
+      transform: scale(1.2)
+      width: 2.1vw

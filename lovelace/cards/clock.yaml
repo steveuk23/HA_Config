@@ -1,0 +1,33 @@
+type: custom:mod-card
+card:
+  type: custom:html-template-card
+  ignore_line_breaks: true
+  content: |
+    <h2>{{states('sensor.time')}}</h2>
+    {% set day_of_month = now().day %}
+    {% if day_of_month in [1, 21, 31] %}
+      {% set display_date = day_of_month ~ 'st' %}
+    {% elif day_of_month in [2, 22] %}
+      {% set display_date = day_of_month ~ 'nd' %}
+    {% elif day_of_month in [3, 23] %}
+      {% set display_date = day_of_month ~ 'rd' %}
+    {% else %}
+      {% set display_date = day_of_month ~ 'th' %}
+    {% endif %}
+    <div class="date"><p>{{now().strftime('%A')}},</p><p>{{display_date}} {{now().strftime('%B')}}</p></div>
+card_mod:
+  style: |
+    :host {
+      top: 13%;
+      left: 50%;
+      width: 100%;
+    }
+    h2 {
+      font-size: 65px;
+    }
+    .date {
+      font-size: 32px;
+    }
+    ha-card {
+      border: none !important;
+    }

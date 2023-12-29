@@ -1,0 +1,328 @@
+type: vertical-stack
+
+    #################################################################
+    #                                                               #
+    #                      TABLET RIGHT SCREEN                      #
+    #                                                               #
+    #################################################################
+
+
+view_layout:
+  grid-area: main2
+cards:
+  - type: custom:button-card
+    entity: sensor.moonphases
+    show_entity_picture: true
+    show_state: true
+    show_name: false
+    styles:
+      card:
+        - border: solid 2px black
+        - background-image: url(/local/images/backgrounds/space.gif)
+      state:
+        - font-size: 20px
+        - padding-top: 8px
+        
+#ROOM SELECT SWIPE CARD#
+     
+  - type: vertical-stack
+    cards:
+      - type: custom:swipe-card
+        card_width: 225px
+        start_card: 2
+        parameters:
+          effect: coverflow
+          grabCursor: true
+          centeredSlides: true
+          slidesPerView: auto
+          slideShadows: false
+          coverflowEffect:
+            rotate: 5
+            stretch: -5
+            depth: 150
+            modifier: 3
+            slideShadows: true
+          pagination:
+            type: none
+        style:
+          left: 50%
+          top: 65%
+          width: 96%
+          opacity: 100%
+#KITCHEN#
+        cards:
+          - type: custom:button-card
+            name: Kitchen
+            tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.room_select
+                option: kitchen
+            double_tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.room_select
+                option: blank
+            styles:
+              card:
+                - height: 150px
+                - padding: 4%
+                - width: 250px
+                - background-image: url(/local/images/areas/kitchen.JPG)
+                - background-size: cover
+                - opacity: null
+                - border-radius: 25px
+                - border-width: 2px
+                - border-color: black
+                - border-style: solid
+              name:
+                - font-size: 25px
+                - align-self: middle
+                - padding-top: 100px
+#NATHANS ROOM#                
+          - type: custom:button-card
+            name: Nathans Room
+            tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.room_select
+                option: nathans_room
+            double_tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.room_select
+                option: blank
+            styles:
+              card:
+                - height: 150px
+                - padding: 4%
+                - width: 250px
+                - background-image: url(/local/images/areas/nathan.jpg)
+                - background-size: cover
+                - opacity: null
+                - border-radius: 25px
+                - border-width: 2px
+                - border-color: black
+                - border-style: solid
+              name:
+                - font-size: 25px
+                - align-self: middle
+                - padding-top: 100px
+#BEDROOM#                
+          - type: custom:button-card
+            name: Bedroom
+            tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.room_select
+                option: bedroom
+            double_tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.room_select
+                option: blank
+            styles:
+              card:
+                - height: 150px
+                - padding: 4%
+                - width: 250px
+                - background-image: url(/local/images/areas/bedroom.jpg)
+                - background-size: cover
+                - border-radius: 25px
+                - border-width: 2px
+                - border-color: black
+                - border-style: solid
+              name:
+                - font-size: 25px
+                - align-self: middle
+                - padding-top: 100px
+#CARRISES ROOM#                
+          - type: custom:button-card
+            name: Carrises Room
+            tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.room_select
+                option: carrises_room
+            double_tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.room_select
+                option: blank
+            styles:
+              card:
+                - height: 150px
+                - padding: 4%
+                - width: 250px
+                - background-image: url(/local/images/areas/living_room.JPG)
+                - background-size: cover
+                - opacity: null
+                - border-radius: 25px
+                - border-width: 2px
+                - border-color: black
+                - border-style: solid
+              name:
+                - font-size: 25px
+                - align-self: middle
+                - padding-top: 100px
+#LIVING ROOM#                
+          - type: custom:button-card
+            name: Living Room
+            tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.room_select
+                option: living_room
+            double_tap_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: input_select.menu_select
+                option: blank
+            styles:
+              card:
+                - height: 150px
+                - padding: 4%
+                - width: 250px
+                - background-image: url(/local/images/areas/living_room.jpg)
+                - background-size: cover
+                - border-width: 2px
+                - border-color: black
+                - border-style: solid
+              name:
+                - font-size: 25px
+                - align-self: middle
+                - padding-top: 100px
+#NATHANS CONDITIONAL#                
+      - type: conditional
+        conditions:
+          - entity: input_select.room_select
+            state: nathans_room
+        card:
+          type: entities
+          entities:
+            - entity: switch.nathans_fish_tank
+              name: Fish Tank light
+              icon: mdi:fish
+              secondary_info: last-changed
+            - entity: media_player.nathan
+              name: Alexa
+            - entity: switch.guitar_pedals
+              icon: mdi:guitar-acoustic
+              secondary_info: last-changed
+            - entity: switch.computer
+              name: Computer
+          style: |
+            ha-card {
+            border: solid 2px black; box-shadow: none;
+                     } 
+#LIVING ROOM CONDITIONAL#                     
+      - type: conditional
+        conditions:
+          - entity: input_select.room_select
+            state: living_room
+        card:
+          type: entities
+          entities:
+            - entity: light.tv_leds
+              name: Tv Leds
+            - entity: light.fish_left
+            - entity: light.fish_right
+            - entity: media_player.sony_tv
+              name: Sony TV
+            - entity: media_player.living_room_dot
+              name: Alexa
+          style: |
+            ha-card {
+            border: solid 2px black; box-shadow: none;
+                     } 
+#KITCHEN CONDITIONAL#                     
+      - type: conditional
+        conditions:
+          - entity: input_select.room_select
+            state: kitchen
+        card:
+          type: entities
+          entities:
+            - entity: light.kitchen_lamp
+            - entity: media_player.kitchen_display
+          style: |
+            ha-card {
+            border: solid 2px black; box-shadow: none;
+                     } 
+#CARRISES ROOM CONDITIONAL#                     
+      - type: conditional
+        conditions:
+          - entity: input_select.room_select
+            state: carrises_room
+        card:
+          type: entities
+          entities:
+            - entity: light.carrises_leds
+            - entity: media_player.googlehome0646
+          style: |
+            ha-card {
+            border: solid 2px black; box-shadow: none;
+                     } 
+#BEDROOM CONDITIONAL#                     
+      - type: conditional
+        conditions:
+          - entity: input_select.room_select
+            state: bedroom
+        card:
+          type: entities
+          entities:
+            - entity: light.steves_lamp
+            - entity: light.saras_lamp
+            - entity: media_player.bedroom_display
+            - entity: light.sara_leds
+              icon: mdi:led-strip-variant
+          style: |
+            ha-card {
+            border: solid 2px black; box-shadow: none;
+                     } 
+#BLANK CONDITIONAL#                     
+      - type: conditional
+        conditions:
+          - entity: input_select.menu_select
+            state: blank
+        card:
+          type: custom:button-card
+          show_name: false
+          show_icon: false
+          styles:
+            card:
+              - height: 1px
+              - background: none
+              - box-shadow: none
+              - border: none
+
+
+    conditions:
+      - entity: media_player.bedroom_display
+        state_not: 'off'
+      - entity: media_player.bedroom_display
+        state_not: unavailable
+    card:
+      type: custom:decluttering-card
+      view_layout:
+        grid-area: main3
+      template: media_card_speaker
+      variables:
+        - entity: media_player.bedroom_display
+      card_mod:
+        style: |
+          ha-card {
+            background: none !important;
+            box-shadow: none !important;
+          }
+

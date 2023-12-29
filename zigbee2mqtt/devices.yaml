@@ -1,0 +1,75 @@
+'0x00158d0001657049':
+  friendly_name: Bedroom Motion
+  occupancy_timeout: 30
+'0x000d6ffffe2c1ebd':
+  friendly_name: Chesters Lamp
+'0x00158d0001737c29':
+  friendly_name: Dining Room
+'0x00158d000166123d':
+  friendly_name: Spare
+'0xec1bbdfffeb07487':
+  friendly_name: Nathans Fish Tank
+'0x842e14fffeefd3ab':
+  friendly_name: Guitar Pedals
+'0x000781c85c65158a':
+  friendly_name: '0x000781c85c65158a'
+'0x000b57fffeeae4f6':
+  friendly_name: Hallway Lamp
+'0x000b57fffe3832b6':
+  friendly_name: Porch
+'0x00158d0001564912':
+  friendly_name: Freezerold
+'0x00158d00015964e0':
+  friendly_name: Room window
+'0x00158d00019fff8d':
+  friendly_name: Dining room window right
+'0x00158d00015649c9':
+  friendly_name: Living Room door
+'0x000b57fffeeb3e51':
+  friendly_name: Kitchen Lamp
+'0x000b57fffe2ae0bb':
+  friendly_name: Dining Room Lamp
+'0x001e5e09021d15b0':
+  friendly_name: Bedroom TV
+'0x00158d00016612cb':
+  friendly_name: Kitchen Motion
+'0x00158d00014de259':
+  friendly_name: Internal Shed Door
+'0x000b3cfffef6e1aa':
+  friendly_name: 'Steves Lamp    '
+'0x000b3cfffefadf9e':
+  friendly_name: Saras Lamp
+'0x000d6ffffe09ebca':
+  friendly_name: Ikea Button
+'0x00158d00011c8d37':
+  friendly_name: Dining room window left
+'0xf0d1b8000014318c':
+  friendly_name: Room Lamp
+'0x00158d0001596550':
+  friendly_name: Fridge
+'0x000d6f000b938769':
+  friendly_name: Nathan's Xbox
+'0x000d6f000bba7ca4':
+  friendly_name: Freezer
+'0x000d6f000ed347be':
+  friendly_name: hive_thermostat
+'0x001e5e0902193948':
+  friendly_name: hive_receiver
+'0x001e5e09023aca69':
+  friendly_name: hive_thermostat_old
+'0xcc86ecfffe92be71':
+  friendly_name: Nathans Button
+  legacy: false
+'0x00158d000120d4cf':
+  friendly_name: Button
+  legacy: false
+'0x385b44fffee3a005':
+  friendly_name: Media Plug
+'0x385b44fffee7a05c':
+  friendly_name: Computer
+  description: Nathans Pc
+'0x00158d0008dffcdd':
+  friendly_name: water leak combi
+'0x142d41fffe255618':
+  friendly_name: Bedroom Button
+  description: Our Bedroom

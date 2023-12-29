@@ -1,0 +1,57 @@
+#TAMPER STATUS#
+
+sensor:
+  - platform: template
+    sensors:
+      tamper_status:
+        unique_id: tamper_status
+        friendly_name: "Tamper Alarm"
+        value_template: >-
+          {% if ("+LID TAMP" in states('sensor.galaxy_log_3')) %} Tamper
+          {% endif %}
+    
+#ALARM IS SETTING STATUS#
+
+  - platform: template
+    sensors:
+      galaxy_status:
+        unique_id: galaxy_status
+        friendly_name: "Alarm Setting Status"
+        value_template: >-
+          {% if ("----------" in states('sensor.galaxy_vkp_line2')) %} Setting
+          {% endif %}
+          
+#INTRUSION DETECTED#  
+        
+  - platform: template
+    sensors:
+      intrusion_status:
+        unique_id: intrusion_status
+        friendly_name: "Intruder Alarm"
+        value_template: >-
+          {% if ("BURGL" in states('sensor.galaxy_log_3')) %} Intrusion Detected
+          {% endif %}
+
+#ALARM LOG#
+mqtt:
+  sensor:
+    - name: "Galaxy Log"
+      unique_id: "galaxy_log"
+      state_topic: "selfmon/vmod.010faa/vprinter/log"
+      
+#FLEX STATUS#
+
+    - name: "flex Status" 
+      state_topic: "selfmon/vmod.010faa/sia4/groups/1"
+
+      
+#ALARM KEYPAD STATUS#
+
+    - name: "Galaxy_VKP_Line1"
+      unique_id: "galaxy_vkp_line1"
+      state_topic: "selfmon/vmod.010faa/vkp/display/line1"
+
+    - name: "Galaxy_VKP_Line2"
+      unique_id: "galaxy_vkp_line2"
+      state_topic: "selfmon/vmod.010faa/vkp/display/line2"
+

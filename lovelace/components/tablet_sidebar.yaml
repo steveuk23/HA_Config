@@ -1,0 +1,371 @@
+type: picture-elements
+image: /local/images/backgrounds/background5.png
+style:
+  .: |
+    ha-card {
+      border-radius: 0px;
+      overflow: hidden;
+      width: 101%;
+      length: 100%;
+      margin: 0px !important;
+      border: 0px !important;
+      padding: 0px !important;
+      background: none !important;
+      box-shadow: 2px 2px 5px 1px black;
+    }
+    :host {
+      top: 57%;
+      left: 0%;
+    }
+
+view_layout:
+  grid-area: sidebar
+  
+elements:
+
+    #################################################################
+    #                                                               #
+    #                             SIDEBAR                           #
+    #                                                               #
+    #################################################################
+
+#CLOCK#
+
+  - !include ../cards/clock.yaml
+  
+#GREETING#
+
+  - !include ../cards/greeting.yaml
+  
+#MENU BUTTONS# 
+
+  - type: custom:button-card
+    template: navigation
+    name: Home
+    tap_action:
+      action: navigate
+      navigation_path: /tablet-dash/0
+    style:
+      top: 35%
+      left: 18%
+    styles:
+      card:
+        - border: none
+    state:
+      - operator: template
+        value: >
+          [[[return (window.location.pathname == '/tablet-dash/0')
+            ]]]
+        styles:
+          card:
+            - padding-left: 5px
+            - border-left-style: solid
+            - border-color: rgb(75,0,130)
+            - border-width: 5px
+          name:
+            - font-weight: normal
+            - text-shadow: 2px 2px black
+            
+  - type: custom:button-card
+    template: navigation
+    name: Climate
+    tap_action:
+      action: navigate
+      navigation_path: /tablet-dash/1
+    style:
+      top: 40%
+      left: 21%
+    styles:
+      card:
+        - border: none
+    state:
+      - operator: template
+        value: >
+          [[[return (window.location.pathname == '/tablet-dash/1')
+            ]]]
+        styles:
+          card:
+            - padding-left: 5px
+            - border-left-style: solid
+            - border-color: rgb(75,0,130)
+            - border-width: 5px
+          name:
+            - font-weight: normal
+            - text-shadow: 2px 2px black
+
+  - type: custom:button-card
+    template: navigation
+    name: Cameras
+    tap_action:
+      action: navigate
+      navigation_path: /tablet-dash/2
+    style:
+      top: 45%
+      left: 24%
+    styles:
+      card:
+        - border: none
+    state:
+      - operator: template
+        value: >
+          [[[return (window.location.pathname == '/tablet-dash/2')
+            ]]]
+        styles:
+          card:
+            - padding-left: 5px
+            - border-left-style: solid
+            - border-color: rgb(75,0,130)
+            - border-width: 5px
+          name:
+            - font-weight: normal
+            - text-shadow: 2px 2px black
+
+  - type: custom:button-card
+    template: navigation
+    name: Floorplan
+    tap_action:
+      action: navigate
+      navigation_path: /lovelace-floorplan/home
+    style:
+      top: 50%
+      left: 26%
+    styles:
+      card:
+        - border: none
+    state:
+      - operator: template
+        value: >
+          [[[return (window.location.pathname == '/lovelace-floorplan/home')
+            ]]]
+        styles:
+          card:
+            - padding-left: 5px
+            - border-left-style: solid
+            - border-color: rgb(75,0,130)
+            - border-width: 5px
+          name:
+            - font-weight: normal
+            - text-shadow: 2px 2px black
+
+  - type: custom:button-card
+    template: navigation
+    name: Energy
+    tap_action:
+      action: navigate
+      navigation_path: /tablet-dash/energy
+    style:
+      top: 55%
+      left: 20%
+    styles:
+      card:
+        - border: none
+    state:
+      - operator: template
+        value: >
+          [[[return (window.location.pathname == '/tablet-dash/energy')
+            ]]]
+        styles:
+          card:
+            - padding-left: 5px
+            - border-left-style: solid
+            - border-color: rgb(75,0,130)
+            - border-width: 5px
+          name:
+            - font-weight: normal
+            - text-shadow: 2px 2px black
+
+
+
+#PERSON STATUS#
+
+  - type: custom:button-card
+    tap_action:
+      action: none
+    entity: device_tracker.sara_mobile
+    show_entity_picture: true
+    show_state: true
+    show_icon: false
+    show_name: false
+    hold_action:
+      action: none
+    styles:
+      card: 
+        - border: none
+    state:
+      - value: 'home'
+        entity_picture: /local/images/person/sara/home.png
+        styles:
+      - value: 'not_home'
+        entity_picture: /local/images/person/sara/home.png
+      - value: 'asda'
+        entity_picture: /local/images/person/sara/home.png
+
+        styles:
+          card:
+            - filter: opacity(50%)
+
+    card_mod:
+      style: |
+        ha-card {
+          background: none !important;
+          box-shadow: none !important;
+        }
+        :host {
+          top: 64.5%;
+          left: 70%;
+          width: 80%;
+        }
+
+  - type: custom:button-card
+    tap_action:
+      action: none
+    entity: device_tracker.steves_mobile
+    show_entity_picture: true
+    show_state: true
+    show_icon: false
+    show_name: false
+    hold_action:
+      action: none
+    styles:
+      card: 
+        - border: none
+    state:
+      - value: 'home'
+        entity_picture: /local/images/person/steve/home.png
+        styles:
+      - value: 'work'
+        entity_picture: /local/images/person/steve/work.png
+      - value: 'asda'
+        entity_picture: /local/images/person/steve/shopping.png
+
+        styles:
+          card:
+            - filter: opacity(50%)
+
+    card_mod:
+      style: |
+        ha-card {
+          background: none !important;
+          box-shadow: none !important;
+        }
+        :host {
+          top: 64%;
+          left: 22%;
+          width: 80%;
+        }
+
+
+#FOOTBALL
+
+  - type: custom:button-card
+    entity: sensor.leeds_next_fixture_2
+    show_icon: false
+    show_name: false
+    styles:
+      card:
+        - height: 122px
+        - font-size: 11px
+        - border: none
+
+      grid:
+        - grid-template-areas: >-
+            "h_crest competition a_crest" "h_crest date a_crest" "h_crest time
+            a_crest"
+        - grid-template-columns: 1fr 1fr 1fr
+        - grid-template-rows: 1fr 1fr 1fr
+      custom_fields:
+        h_crest:
+          - display: inline-grid
+          - place-self: center
+          - align-self: flex-start
+        competition:
+          - display: inline-grid
+          - align-self: center
+        date:
+          - display: inline-grid
+          - align-self: center
+        time:
+          - display: inline-grid
+          - align-self: center
+        a_crest:
+          - display: inline-grid
+          - place-self: center
+          - align-self: flex-start
+    custom_fields:
+      h_crest: >
+        [[[ return `<img id="icon"
+        src="/local/images/PL/${entity.attributes.home_team}.png" style="position:
+        relative;">` ]]]
+      competition: |
+        [[[ return `<span>${entity.attributes.competition}</span>` ]]]
+      date: |
+        [[[ return `<span>${entity.attributes.date}</span>` ]]]
+      time: |
+        [[[ return `<span>${entity.attributes.time}</span>` ]]]
+      a_crest: >
+        [[[ return `<img id="icon"
+        src="/local/images/PL/${entity.attributes.away_team}.png" style=" position:
+        relative;">` ]]]
+    style: |
+      ha-card {
+        background: none !important;
+        box-shadow: none !important;
+
+      } 
+      :host {
+        top: 78%;
+        left: 49%;
+        width:100%;
+      }
+
+
+#WEATHER#
+
+  - type: custom:weather-card
+    entity: weather.home
+    current: true
+    details: false
+    forecast: false
+    card_mod:
+      style: |
+        ha-card {
+          border: none !important;
+          background: none !important;
+          box-shadow: none !important;
+        }
+        :host {
+          top: 90%;
+          left: 48%;
+          width: 100%;
+        }
+        
+  - type: state-label
+    entity: weather.home
+    style:
+      top: 96%
+      left: 40%
+      font-size: 26px
+      color: grey
+
+
+#SETTINGS BUTTONS
+
+  - type: custom:button-card
+    template: navigation
+    name: Settings
+    show_name: false
+    icon: mdi:cog
+    tap_action:
+      action: navigate
+      navigation_path: /config/dashboard
+    style:
+      top: 96%
+      left: 90%
+    styles:
+      card:
+        - height: 75px
+        - width: 75px
+        - border: none
+      icon: 
+        - color: grey
+

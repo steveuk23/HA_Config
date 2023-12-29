@@ -1,0 +1,70 @@
+boost:
+  alias: Boost Heating 30 mins
+  sequence:
+  - service: mqtt.publish
+    data:
+      topic: zigbee2mqtt/hive_receiver/set
+      payload: '{    "system_mode":"emergency_heating",    "temperature_setpoint_hold_duration":"30",     "temperature_setpoint_hold":"1",    "occupied_heating_setpoint":20
+        }'
+  - service: timer.start
+    data:
+      duration: '0'
+    target:
+      entity_id: timer.boost_30
+  mode: single
+  icon: mdi:fire
+'1611181589757':
+  alias: Boost Heating 45 mins
+  sequence:
+  - service: mqtt.publish
+    data:
+      payload: '{    "system_mode":"emergency_heating",    "temperature_setpoint_hold_duration":"45",     "temperature_setpoint_hold":"1",    "occupied_heating_setpoint":20
+        }'
+      topic: zigbee2mqtt/hive_receiver/set
+  - service: timer.start
+    data:
+      duration: '0'
+    target:
+      entity_id: timer.boost_45
+  mode: single
+  icon: mdi:fire
+'1611181628914':
+  alias: Boost Heating 60 mins
+  sequence:
+  - service: mqtt.publish
+    data:
+      payload: '{    "system_mode":"emergency_heating",    "temperature_setpoint_hold_duration":"60",     "temperature_setpoint_hold":"1",    "occupied_heating_setpoint":20
+        }'
+      topic: zigbee2mqtt/hive_receiver/set
+  - service: timer.start
+    data:
+      duration: '0'
+    target:
+      entity_id: timer.boost_60
+  mode: single
+  icon: mdi:fire
+stop_boost:
+  alias: Stop Boost
+  sequence:
+  - service: automation.trigger
+    data: {}
+    target:
+      entity_id: automation.house_thermostat_auto_fix
+  - service: timer.finish
+    target:
+      entity_id: timer.boost_30
+  - service: timer.finish
+    target:
+      entity_id: timer.boost_45
+  - service: timer.finish
+    target:
+      entity_id: timer.boost_60
+  mode: single
+  icon: mdi:fire
+actionable_notification:
+  alias: actionable_notification
+  sequence:
+  - wait_for_trigger: []
+    continue_on_timeout: false
+  mode: single
+  icon: mdi:bell

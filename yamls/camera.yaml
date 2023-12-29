@@ -1,0 +1,35 @@
+
+- platform: generic
+  still_image_url: http://192.168.1.36:65001/ISAPI/Streaming/channels/1/picture
+  stream_source: !secret camera_back_rtsp
+  name: Back camera SD
+  username: !secret camera_username
+  password: !secret camera_pass
+  authentication: digest
+  
+- platform: generic
+  still_image_url: !secret still_image_url_back
+  stream_source: !secret camera_back_hd_rtsp
+  name: Back Camera HD
+  username: !secret camera_username
+  password: !secret camera_pass
+  authentication: digest
+
+#- platform: generic
+#  still_image_url: !secret still_image_url_front
+#  stream_source: !secret camera_front_rtsp
+#  name: front camera SD
+#  username: !secret camera_username
+#  password: !secret camera_pass
+#  authentication: digest
+
+#- platform: generic
+#  still_image_url: !secret still_image_url_front
+#  stream_source: !secret camera_front_hd_rtsp
+#  name: Front Camera HD
+#  username: !secret camera_username
+#  password: !secret camera_pass
+#  authentication: digest
+  
+
+

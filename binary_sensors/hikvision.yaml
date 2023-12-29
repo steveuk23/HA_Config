@@ -1,0 +1,6 @@
+- platform: hikvision
+  host: !secret hikvision_host
+  port: !secret hikvision_port
+  ssl: false
+  username: !secret camera_username
+  password: !secret camera_pass

@@ -1,0 +1,73 @@
+homeassistant:
+  name: Home
+  latitude: !secret homeassistant_latitude
+  longitude: !secret homeassistant_longitude
+  elevation: !secret homeassistant_elevation
+  unit_system: metric
+  currency: GBP
+  country: GB
+  time_zone: Europe/London
+  customize: !include yamls/customize.yaml
+  packages: !include_dir_named packages
+ 
+default_config:
+lovelace:
+  mode: storage
+  dashboards:
+    tablet-dash:
+      mode: yaml
+      title: tablet
+      show_in_sidebar: true
+      filename: tablet.yaml
+  resources: #hacs
+    - url: /hacsfiles/button-card/button-card.js
+      type: module
+    - url: /hacsfiles/lovelace-card-mod/card-mod.js
+      type: module
+    - url: /hacsfiles/lovelace-layout-card/layout-card.js
+      type: module
+    - url: /hacsfiles/lovelace-slider-entity-row/slider-entity-row.js
+      type: module
+    - url: /local/plugins/text-element.js
+      type: module
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+tts:
+  - platform: google_translate
+    language: en
+    cache: true
+    cache_dir: /tmp/tss
+    time_memory: 300
+    service_name: google_say
+     
+    
+#alexa_media:
+ # accounts:
+ #   email: !secret amazon_email
+ #   password: !secret amazon_pass
+ #   url: amazon.co.uk
+    
+
+    
+# Yamls
+
+automation: !include automations.yaml
+binary_sensor: !include_dir_merge_list binary_sensors/
+#camera: !include yamls/camera.yaml
+media_player: !include yamls/media_player.yaml
+group: !include yamls/groups.yaml
+recorder: !include yamls/recorder.yaml
+script: !include scripts.yaml
+sensor: !include_dir_merge_list sensors/
+scene: !include scenes.yaml
+logger: !include logger.yaml
+
+#light: !include yamls/lights.yaml
+#utility_meter: !include yamls/utility_meter.yaml
+#influxdb: !include yamls/influxdb.yaml
+
+
+
+  

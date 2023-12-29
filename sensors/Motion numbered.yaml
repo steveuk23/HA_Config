@@ -1,0 +1,10 @@
+  - platform: template
+    sensors:
+      motion_amount:
+        value_template: "{{ expand('group.motion_sensors') | selectattr('state', 'eq' , 'on') | list | count }}"
+        icon_template: >-
+          {% if is_state("sensor.motion_amount", "0") %}
+            mdi:motion-sensor-off
+          {% else %}
+            mdi:motion-sensor
+          {% endif %}

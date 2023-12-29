@@ -1,0 +1,13 @@
+
+ 
+#MOONPHASES#
+
+  - platform: template
+    sensors:
+      moonphases:
+        friendly_name: 'Moon'
+        value_template: >
+          {{ states('sensor.moon').capitalize().replace('_',' ')}}
+        entity_picture_template: >
+          {% set state = states('sensor.moon') %}
+            {{ '/local/images/moon_phases/{}.png'.format(state) }}

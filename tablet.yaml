@@ -1,0 +1,639 @@
+title: Tablet
+
+button_card_templates: !include_dir_merge_named lovelace/button_templates/
+
+decluttering_templates: !include_dir_merge_named lovelace/decluttering_templates/
+
+views:   
+  ################################################################################################################
+  #                                                                                                              #
+  #                                                Main view                                                     #
+  #                                                                                                              #
+  ################################################################################################################
+
+  - title: Home
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: 25% 33% 24% 15%
+          grid-template-rows: none 50px 50px 50px
+          grid-column-gap: 2px
+          grid-row-gap: 2px
+          grid-template-areas: |
+            "sidebar main1 main2 main3"
+            "sidebar main4 main5 main6"
+            "sidebar main7 main8 main9"
+            "sidebar main10 main11 main12"
+        cards:
+          - !include /config/lovelace/components/tablet_sidebar.yaml
+          - !include /config/lovelace/cards/tablet_main.yaml
+          - !include /config/lovelace/cards/tablet_right_1.yaml
+          - !include /config/lovelace/cards/tablet_right_2.yaml
+          
+
+
+  ################################################################################################################
+  #                                                                                                              #
+  #                                                Climate view                                                  #
+  #                                                                                                              #
+  ################################################################################################################
+
+  - title: Climate
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: 25% 25% 25% 25%
+          grid-template-rows: auto auto
+          grid-auto-rows: max-content
+          grid-column-gap: 5px
+          grid-row-gap: 5px
+          grid-template-areas: |
+            "sidebar main1 main2 main3"
+            "sidebar main4 main5 main6"
+        cards:
+          - !include /config/lovelace/components/tablet_sidebar.yaml
+        # - !include /config/lovelace/cards/climate_main.yml#
+          - type: entities
+            view_layout:
+              grid-area: main1
+              place-items: left
+            entities:
+              - entity: sensor.system_mode
+              - entity: sensor.running_state
+              - entity: sensor.target_temperature
+              - entity: sensor.boost_remaining
+              - entity: timer.boost_30
+                name: test boost
+              - entity: sensor.current_temperature
+          - type: custom:mini-graph-card
+            view_layout:
+              grid-area: main2
+            entities:
+              - entity: sensor.current_temperature
+                index: 0
+                name: Weekly Temperature
+                show_state: true
+            hours_to_show: 168
+            points_per_hour: 0.25
+            show:
+              labels: true
+            animate: true
+            color_thresholds:
+              - value: 17
+                color: '#6fa8dc'
+              - value: 19
+                color: '#f59f11'
+              - value: 20
+                color: '#f39c12'
+              - value: 20.5
+                color: '#d35400'
+              - value: 21
+                color: '#c0392b'     
+          - type: custom:simple-thermostat
+            icon: mdi:radiator
+            name: Home
+            show_name: true
+            entity: climate.hive_receiver
+            view_layout:
+                grid-area: main3
+
+
+
+
+
+  ################################################################################################################
+  #                                                                                                              #
+  #                                                Camera view                                                   #
+  #                                                                                                              #
+  ################################################################################################################
+
+  - title: Cameras
+    panel: true
+    path: cameras
+    cards:
+      - type: custom:layout-card
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: 25% 38% 38%
+          grid-column-gap: 0px
+          grid-row-gap: 0px
+          grid-template-rows: auto
+          grid-template-areas: |
+            "sidebar main1 main2"
+            "sidebar main3 main4"
+            "sidebar main5 main6"
+            "sidebar main7 main8"
+        cards:
+          - !include /config/lovelace/components/tablet_sidebar.yaml
+          - type: picture-entity
+            view_layout:
+            grid-area: main1
+            entity: camera.192_168_1_36
+            tap_action:
+              action: fire-dom-event
+              browser_mod:
+                service: browser_mod.popup
+                data:
+                  content:
+                    type: picture-entity
+                    entity: camera.192_168_1_36
+                    show_state: false
+                    show_name: false
+                    camera_view: live
+                  title: Front Camera
+                  size: fullscreen
+                target:
+                device_id: 71a3e718e877bcc3ec91617e288ac65c
+            
+            
+          - type: picture-entity
+            view_layout:
+            grid-area: main2
+            entity: camera.back_hd
+            tap_action:
+              action: fire-dom-event
+              browser_mod:
+                service: browser_mod.popup
+                data:
+                  title: Back Camera
+                  size: fullscreen
+                  content:
+                    type: custom:webrtc-camera
+                    #entity: camera.back_hd
+                    url: !secret camera_back_url
+                    ui: true
+
+                
+          - type: picture-entity
+            view_layout:
+            grid-area: main3
+            entity: camera.room_camera_hd_stream
+            tap_action:
+              action: fire-dom-event
+              browser_mod:
+                service: browser_mod.popup
+                data:
+                  content:
+                    type: picture-entity
+                    entity: camera.room_camera_hd_stream
+                    show_state: false
+                    show_name: false
+                    camera_view: live
+                  title: Living room Camera
+                  size: fullscreen
+                target:
+                device_id: 71a3e718e877bcc3ec91617e288ac65c
+                
+          - type: picture-entity
+            view_layout:
+            grid-area: main4
+            entity: camera.side_camera_hd_stream
+            tap_action:
+              action: fire-dom-event
+              browser_mod:
+                service: browser_mod.popup
+                data:
+                  content:
+                    type: picture-entity
+                    entity: camera.side_camera_hd_stream
+                    show_state: false
+                    show_name: false
+                    camera_view: live
+                  title: Side Camera
+                  size: fullscreen
+                target:
+                device_id: 71a3e718e877bcc3ec91617e288ac65c
+            
+  ################################################################################################################
+  #                                                                                                              #
+  #                                                Energy view                                                   #
+  #                                                                                                              #
+  ################################################################################################################
+
+  - title: Energy
+    panel: true
+    path: energy
+    cards:
+      - type: custom:layout-card
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: 25% 38% 38%
+          grid-column-gap: 0px
+          grid-row-gap: 0px
+          grid-template-rows: auto
+          grid-template-areas: |
+            "sidebar main1 main2"
+            "sidebar main3 main4"
+            "sidebar main5 main6"
+            "sidebar main7 main8"
+        cards:
+          - !include /config/lovelace/components/tablet_sidebar.yaml
+          - type: custom:apexcharts-card
+            update_interval: 5min
+            apex_config:
+              xaxis:
+                labels:
+                  format: ddd
+              stroke:
+                show: true
+                width: 2
+                curve: smooth
+              chart:
+                height: 140%
+              legend:
+                show: true
+                showForSingleSeries: true
+                horizontalAlign: right
+                position: top
+              dataLabels:
+                offsetY: 2
+                style:
+                  fontSize: 12px
+                enabled: true
+                background:
+                  enabled: true
+                  borderColor: '#fff'
+                  borderWidth: 2
+                  borderRadius: 2
+                  opacity: 0.7
+                  foreColor: '#ccccff'
+                  dropShadow:
+                    enabled: true
+                    top: 2
+                    left: 2
+                    blur: 1
+                    color: '#000000'
+                    opacity: 0.5
+              fill:
+                type: gradient
+                gradient:
+                  type: horizontal
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.25
+                  opacityTo: 1
+                  inverseColors: true
+                  stops:
+                    - 0
+                    - 90
+                    - 100
+            graph_span: 1w
+            span:
+              end: day
+            header:
+              show: true
+              title: Daily Electricity Usage
+            series:
+              - entity: sensor.daily_energy
+                color: rgb(255,140,0)
+                type: column
+                show:
+                  datalabels: true
+                group_by:
+                  func: last
+                  duration: 1d
+                unit: kWh
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            update_interval: 5min
+            apex_config:
+              xaxis:
+                labels:
+                  format: ddd
+              stroke:
+                show: true
+                width: 2
+                curve: smooth
+              chart:
+                height: 140%
+              legend:
+                show: true
+                showForSingleSeries: true
+                horizontalAlign: right
+                position: top
+              dataLabels:
+                offsetY: 2
+                style:
+                  fontSize: 12px
+                enabled: true
+                background:
+                  enabled: true
+                  borderColor: '#fff'
+                  borderWidth: 2
+                  borderRadius: 2
+                  opacity: 0.7
+                  foreColor: '#ccccff'
+                  dropShadow:
+                    enabled: true
+                    top: 2
+                    left: 2
+                    blur: 1
+                    color: '#000000'
+                    opacity: 0.5
+              fill:
+                type: gradient
+                gradient:
+                  type: horizontal
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.25
+                  opacityTo: 1
+                  inverseColors: true
+                  stops:
+                    - 0
+                    - 90
+                    - 100
+            graph_span: 1w
+            span:
+              end: day
+            header:
+              show: true
+              title: Daily Electricity Cost
+            series:
+              - entity: sensor.daily_costs
+                color: rgb(255,140,0)
+                type: column
+                show:
+                  datalabels: true
+                group_by:
+                  func: last
+                  duration: 1d
+                unit: £
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            update_interval: 5min
+            apex_config:
+              yaxis:
+                show: true
+                decimalsInFloat: 0
+              xaxis:
+                labels:
+                  format: dd/MM
+              stroke:
+                show: true
+                width: 2
+                curve: smooth
+              chart:
+                height: 140%
+              legend:
+                show: true
+                showForSingleSeries: true
+                horizontalAlign: right
+                position: top
+              dataLabels:
+                offsetY: 2
+                style:
+                  fontSize: 12px
+                enabled: true
+                background:
+                  enabled: true
+                  borderColor: '#fff'
+                  borderWidth: 2
+                  borderRadius: 2
+                  opacity: 0.7
+                  foreColor: '#ccccff'
+                  dropShadow:
+                    enabled: true
+                    top: 2
+                    left: 2
+                    blur: 1
+                    color: '#000000'
+                    opacity: 0.5
+              fill:
+                type: gradient
+                gradient:
+                  type: horizontal
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.25
+                  opacityTo: 1
+                  inverseColors: true
+                  stops:
+                    - 0
+                    - 90
+                    - 100
+            graph_span: 4w
+            span:
+              end: week
+            header:
+              show: true
+              title: Weekly Electricity Usage
+            series:
+              - entity: sensor.weekly_energy
+                color: rgb(255,0,0)
+                type: column
+                show:
+                  datalabels: true
+                group_by:
+                  func: last
+                  duration: 7d
+                unit: kWh
+
+          - type: custom:apexcharts-card
+            update_interval: 5min
+            apex_config:
+              yaxis:
+                show: true
+                decimalsInFloat: 0
+              xaxis:
+                labels:
+                  format: dd/MM
+              stroke:
+                show: true
+                width: 2
+                curve: smooth
+              chart:
+                height: 140%
+              legend:
+                show: true
+                showForSingleSeries: true
+                horizontalAlign: right
+                position: top
+              dataLabels:
+                offsetY: 2
+                style:
+                  fontSize: 12px
+                enabled: true
+                background:
+                  enabled: true
+                  borderColor: '#fff'
+                  borderWidth: 2
+                  borderRadius: 2
+                  opacity: 0.7
+                  foreColor: '#ccccff'
+                  dropShadow:
+                    enabled: true
+                    top: 2
+                    left: 2
+                    blur: 1
+                    color: '#000000'
+                    opacity: 0.5
+              fill:
+                type: gradient
+                gradient:
+                  type: horizontal
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.25
+                  opacityTo: 1
+                  inverseColors: true
+                  stops:
+                    - 0
+                    - 90
+                    - 100
+            graph_span: 4w
+            span:
+              end: week
+            header:
+              show: true
+              title: Weekly Electricity Cost
+            series:
+              - entity: sensor.weekly_costs
+                color: rgb(255,0,0)
+                type: column
+                show:
+                  datalabels: true
+                group_by:
+                  func: last
+                  duration: 7d
+                unit: £
+
+          - type: custom:apexcharts-card
+            update_interval: 5min
+            apex_config:
+              yaxis:
+                show: true
+                decimalsInFloat: 0
+              xaxis:
+                labels:
+                  rotate: '-45'
+                  format: dd
+              stroke:
+                show: true
+                width: 2
+                curve: smooth
+              chart:
+                height: 140%
+              legend:
+                show: true
+                showForSingleSeries: true
+                horizontalAlign: right
+                position: top
+              dataLabels:
+                offsetY: 2
+                style:
+                  fontSize: 12px
+                enabled: true
+                background:
+                  enabled: true
+                  borderColor: '#fff'
+                  borderWidth: 2
+                  borderRadius: 2
+                  opacity: 0.7
+                  foreColor: '#ccccff'
+                  dropShadow:
+                    enabled: true
+                    top: 2
+                    left: 2
+                    blur: 1
+                    color: '#000000'
+                    opacity: 0.5
+              fill:
+                type: gradient
+                gradient:
+                  type: horizontal
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.25
+                  opacityTo: 1
+                  inverseColors: true
+                  stops:
+                    - 0
+                    - 90
+                    - 100
+            graph_span: 6m
+            span:
+              end: month
+            header:
+              show: true
+              title: Monthly Electricity Usage
+            series:
+              - entity: sensor.monthly_energy
+                color: rgb(138,43,226)
+                type: column
+                show:
+                  datalabels: true
+                group_by:
+                  func: last
+                  duration: 1m
+                unit: kWh
+
+          - type: custom:apexcharts-card
+            update_interval: 5min
+            apex_config:
+              yaxis:
+                show: true
+                decimalsInFloat: 0
+              xaxis:
+                labels:
+                  format: mm
+              stroke:
+                show: true
+                width: 2
+                curve: smooth
+              chart:
+                height: 140%
+              legend:
+                show: true
+                showForSingleSeries: true
+                horizontalAlign: right
+                position: top
+              dataLabels:
+                offsetY: 2
+                style:
+                  fontSize: 12px
+                enabled: true
+                background:
+                  enabled: true
+                  borderColor: '#fff'
+                  borderWidth: 2
+                  borderRadius: 2
+                  opacity: 0.7
+                  foreColor: '#ccccff'
+                  dropShadow:
+                    enabled: true
+                    top: 2
+                    left: 2
+                    blur: 1
+                    color: '#000000'
+                    opacity: 0.5
+              fill:
+                type: gradient
+                gradient:
+                  type: horizontal
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.25
+                  opacityTo: 1
+                  inverseColors: true
+                  stops:
+                    - 0
+                    - 90
+                    - 100
+            graph_span: 6m
+            span:
+              end: month
+            header:
+              show: true
+              title: Monthly Electricity Cost
+            series:
+              - entity: sensor.monthly_costs
+                color: rgb(138,43,226)
+                type: column
+                show:
+                  datalabels: true
+                group_by:
+                  func: last
+                  duration: 30d
+                unit: £
+

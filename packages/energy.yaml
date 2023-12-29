@@ -1,0 +1,216 @@
+
+             #########################################################################################################
+             #                              ENERGY SENSORS AND AUTOMATIONS                                           #
+             #                                                                                                       #
+             #########################################################################################################
+                     
+                      ################################################################################
+                      #                            UTILITY METER SENSORS                             #
+                      #                                                                              #
+                      ################################################################################
+                      
+utility_meter:
+  daily_energy:
+    source: sensor.current_energy
+    unique_id: daily_energy_utility_meter
+    cycle: daily
+    name: Daily
+    tariffs:
+      - peak
+      - offpeak
+  weekly_energy:
+    source: sensor.current_energy
+    unique_id: weekly_energy_utility_meter
+    cycle: weekly
+    name: Weekly
+    tariffs:
+      - peak
+      - offpeak
+  monthly_energy:
+    source: sensor.current_energy
+    unique_id: monthly_energy_utility_meter
+    cycle: monthly
+    name: Monthly
+    tariffs:
+      - peak
+      - offpeak
+
+  daily_supply:
+    source: input_number.daily_kwh
+    name: Daily Supply
+    cycle: daily
+    tariffs:
+      - charge
+  daily_correction:
+    source: input_number.daily_kwh
+    name: Daily Correction
+    cycle: daily
+    tariffs:
+      - count
+
+                      ################################################################################
+                      #                      SENSOR TO CALCULATE STANDING ORDER CHARGE               #
+                      #                                                                              #
+                      ################################################################################
+
+input_number:
+  daily_kwh:
+    name: Daily kWh
+    min: 0
+    max: 1000000
+    step: 1
+    unit_of_measurement: Wh
+       
+
+sensor:
+  - platform: integration  
+    unique_id: current_energy
+    source: sensor.energy_monitor_channel_1_power
+    name: Current Energy
+    method: trapezoidal
+    unit_prefix: k
+    round: 3    
+
+template:
+  - sensor:
+                      ################################################################################
+                      #                            ADD PEAK AND OFFPEAK TOGETHER                     #
+                      #                                                                              #
+                      ################################################################################
+                      
+      - name: Daily Energy
+        unique_id: daily_energy
+        state: "{{ states('sensor.daily_energy_peak')|float + (states('sensor.daily_energy_offpeak')|float) }}"
+        unit_of_measurement: kWh  
+        device_class: energy
+        state_class: total_increasing
+        
+      - name: Weekly Energy
+        unique_id: weekly_energy
+        state: "{{ states('sensor.weekly_energy_peak')|float + (states('sensor.weekly_energy_offpeak')|float) }}"
+        unit_of_measurement: kWh  
+        device_class: energy
+        state_class: total_increasing
+        
+      - name: Monthly Energy
+        unique_id: monthly_energy
+        state: "{{ states('sensor.monthly_energy_peak')|float + (states('sensor.monthly_energy_offpeak')|float) }}"
+        unit_of_measurement: kWh  
+        device_class: energy
+        state_class: total_increasing
+
+                      ################################################################################
+                      #                            CALCULATE COSTS                                   #
+                      #                                                                              #
+                      ################################################################################
+        
+      - name: Daily costs
+        state: "{{ (((states('sensor.daily_energy_peak') | float * 0.3809) + (states('sensor.daily_energy_offpeak') | float) * 0.1530 ) + 0.4335) | round(2) }}"
+        unit_of_measurement: '£'  
+        unique_id: daily_costs_new
+        device_class: monetary
+        state_class: total_increasing
+        icon: mdi:currency-gbp
+     
+      - name: Weekly costs
+        unique_id: weekly_costs_new
+        state: "{{ (((states('sensor.weekly_energy_peak') | float * 0.3809) + (states('sensor.weekly_energy_offpeak') | float) * 0.1530 ) + 3.03) | round(2) }}"
+        unit_of_measurement: '£'  
+        device_class: monetary
+        state_class: total_increasing
+        icon: mdi:currency-gbp
+        
+      - name: Monthly costs
+        unique_id: monthly_costs_new
+        state: "{{ (((states('sensor.monthly_energy_peak') | float * 0.3809) + (states('sensor.monthly_energy_offpeak') | float) * 0.1530 ) + 13.185) | round(2) }}"
+        unit_of_measurement: '£'  
+        device_class: monetary
+        state_class: total_increasing
+        icon: mdi:currency-gbp
+ 
+                      ################################################################################
+                      #                      SENSOR TO WORK OUT THE LAST DAY OF THE MONTH            #
+                      #                                                                              #
+                      ################################################################################
+        
+  - binary_sensor:
+      - name: Last Day of the Month
+        icon: mdi:calendar
+        state: "{{ (now() + timedelta(days=1)).day == 1 }}"
+
+                      ################################################################################
+                      #                      SENSOR TO CALCULATE STANDING CHARGE                     #
+                      #                                                                              #
+                      ################################################################################
+
+  - trigger: # rate-limit the template a bit, which would otherwise re-calculate every minute
+      - platform: time_pattern
+        hours: "1" # calculate hourly should be fine
+    sensor:
+      # Increases every day by 1W to fake a daily supply charge in energy dashboard.
+      - state: >-
+          {{ 0.001 * (now() - "2023-01-23" | as_datetime | as_local).days }}
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        unique_id: standing_charge
+        name: "Daily standing charge"
+        icon: mdi:currency-gbp
+
+                      ################################################################################
+                      #                            CHANGE FROM PEAK TO OFFPEAK                       #
+                      #                                                                              #
+                      ################################################################################
+
+automation:
+  - id: 'change_tarrif'
+    alias: Change tarrif
+    description: 'change utility meter tariffs over'
+    trigger:
+      - platform: time
+        at: 01:00
+        variables:
+          tariff: peak
+      - platform: time
+        at: 08:00
+        variables:
+          tariff: peak
+      - platform: time
+        at: 00:00
+        variables:
+          tariff: offpeak
+      - platform: time
+        at: 02:00
+        variables:
+          tariff: offpeak
+    condition: []
+    action:
+      - service: select.select_option
+        target:
+          entity_id: select.daily_energy
+        data:
+          option: "{{ tariff }}"
+      - service: select.select_option
+        target:
+          entity_id: select.weekly_energy
+        data:
+          option: "{{ tariff }}"
+      - service: select.select_option
+        target:
+          entity_id: select.monthly_energy
+        data:
+          option: "{{ tariff }}"
+    mode: single
+
+  - id: 'increment_kwh'
+    alias: Increment kWh
+    description: ''
+    trigger:
+      - platform: time
+        at: '00:01'
+    condition: []
+    action:
+      - service: input_number.increment
+        target:
+          entity_id: input_number.daily_kwh
+    mode: single

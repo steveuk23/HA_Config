@@ -1,0 +1,52 @@
+
+                    ################################################################################
+                    #                              MQTT LIGHTS                                     #
+                    #                                                                              #
+                    ################################################################################
+           
+#FISH TANK LEDS#
+           
+mqtt:
+  light:  
+#SARAS LEDS#
+
+    - name: "Sara_LEDS"
+      schema: json
+      unique_id: sara_leds
+      icon: "mdi:led-strip-variant"
+      state_topic: "LedStrip/Saras_LEDS/rgb/json_status"
+      command_topic: "LedStrip/Saras_LEDS/rgb/json_set"
+      availability_topic: "LedStrip/Saras_LEDS/active"
+      brightness: true
+      rgb: true
+      effect: true
+      effect_list: ["color_mode", "HDMI"]
+      qos: 0
+      optimistic: false
+
+
+    - name: "White"
+      schema: json
+      state_topic: "LedStrip/Saras_LEDS/white/json_status"
+      command_topic: "LedStrip/Saras_LEDS/white/json_set"
+      availability_topic: "LedStrip/Saras_LEDS/active"
+      brightness: true
+      color_temp: true
+      qos: 0
+      optimistic: false
+
+
+    - name: "Combined"
+      schema: json
+      state_topic: "LedStrip/Saras_LEDS/combined/json_status"
+      command_topic: "LedStrip/Saras_LEDS/combined/json_set"
+      availability_topic: "LedStrip/Saras_LEDS/active"
+      brightness: true
+      color_temp: true
+      rgb: true
+      effect: true
+      effect_list: ["white_mode", "color_mode", "both_mode", "HDMI"]
+      qos: 0
+      optimistic: false
+
+

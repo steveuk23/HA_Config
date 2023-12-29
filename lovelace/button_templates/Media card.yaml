@@ -1,0 +1,16 @@
+music_card_speaker_button:        
+  aspect_ratio: 1/1
+  show_name: false
+  show_icon: true
+  size: 100%
+  entity: '[[entity]]'
+  styles:
+    card:
+      - padding: 0px
+      - border-radius: 50%
+      - box-shadow: none
+      - -webkit-box-shadow: none 
+      - border: none
+    icon:
+      - color: rgba(255, 255, 255, 1)
+      - filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.7)) 

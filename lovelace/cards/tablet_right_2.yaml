@@ -1,0 +1,146 @@
+type: vertical-stack
+
+  #################################################################
+  #                                                               #
+  #                      TABLET FAR RIGHT SCREEN                  #
+  #                                                               #
+  #################################################################
+
+cards:
+  - type: custom:button-card
+    entity: sensor.doors_open_amount
+    name: Doors
+    show_state: true
+    size: 35%
+    show_name: true
+    tap_action:
+      action: call-service
+      service: browser_mod.popup
+      service_data: 
+        command: more-info
+        entity_id: group.door_sensors
+    styles:
+      card:
+        - border: solid 2px black
+        - width: 200px
+        - height: 150px
+      grid:
+        - grid-template-areas: '"i" "n" "s"'
+        - grid-template-columns: 80% 100% 100%
+        - grid-template-rows: 50% 80% 0%
+      img_cell:
+        - align-self: start
+        - text-align: start
+        - padding-right: 40px
+        - padding-top: 20px
+      name:
+        - justify-self: start
+        - padding-left: 50px
+        - font-weight: normal
+        - text-transform: capitalize
+        - padding-bottom: 10px
+        - font-size: 20px
+      state:
+        - justify-self: start
+        - padding-left: 140px
+        - font-size: 40px
+        - padding-bottom: 230px
+    state:
+      - value: '0'
+        styles:
+          card:
+            - filter: opacity(50%)
+          icon:
+            - filter: grayscale(50%)
+
+  - type: custom:button-card
+    entity: sensor.motion_amount
+    name: Motion
+    show_state: true
+    size: 35%
+    show_name: true
+    tap_action:
+      action: call-service
+      service: browser_mod.command
+      service_data: 
+        command: more-info
+        entity_id: group.motion_sensors
+    styles:
+      card:
+        - border: solid 2px black
+        - width: 200px
+        - height: 150px
+      grid:
+        - grid-template-areas: '"i" "n" "s"'
+        - grid-template-columns: 80% 100% 100%
+        - grid-template-rows: 50% 80% 0%
+      img_cell:
+        - align-self: start
+        - text-align: start
+        - padding-right: 40px
+        - padding-top: 20px
+      name:
+        - justify-self: start
+        - padding-left: 50px
+        - font-weight: normal
+        - text-transform: capitalize
+        - padding-bottom: 10px
+        - font-size: 20px
+      state:
+        - justify-self: start
+        - padding-left: 140px
+        - font-size: 40px
+        - padding-bottom: 230px
+    state:
+      - value: '0'
+        styles:
+          card:
+            - filter: opacity(50%)
+          icon:
+            - filter: grayscale(100%)
+
+  - type: custom:button-card
+    show_entity_picture: true
+    entity_picture: /local/images/icon/trash-can.png
+    entity: sensor.bin_day
+    show_state: true
+    show_name: true
+    tap_action:
+      action: none
+    styles:
+      card:
+        - font-size: 15px
+        - filter: opacity(100%)
+        - text-shadow: 0px 0px 5px black
+        - border: solid 2px black
+        - width: 200px
+        - height: 150px
+    state:
+      - value: 'on'
+        styles:
+          icon:
+            - color: var(--button-card-light-color)
+  - type: custom:button-card
+    show_entity_picture: true
+    entity_picture: /local/images/icon/recycle-bin.png
+    tap_action:
+      action: none
+    entity: sensor.green_bin
+    show_state: true
+    show_name: true
+    color: green
+    styles:
+      card:
+        - font-size: 15px
+        - filter: opacity(100%)
+        - text-shadow: 0px 0px 5px black
+        - border: solid 2px black
+        - width: 200px
+        - height: 150px
+    state:
+      - value: 'on'
+        styles:
+          card:
+            - filter: opacity(100%)
+          icon:
+            - color: rgb(100,100,255)

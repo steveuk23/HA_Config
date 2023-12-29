@@ -1,0 +1,226 @@
+- id: '1635894470925'
+  alias: House Thermostat ScheduleTEST
+  description: Sets house thermostat temperature based on input_datetimes and input_times
+  trigger:
+  - platform: time
+    at: input_datetime.thermsched_01
+    id: '01'
+  - platform: time
+    id: '02'
+    at: input_datetime.thermsched_02
+  - platform: time
+    id: '03'
+    at: input_datetime.thermsched_03
+  - platform: time
+    id: '04'
+    at: input_datetime.thermsched_04
+  condition:
+  - condition: state
+    entity_id: climate.hive_receiver
+    state: heat
+  - condition: state
+    entity_id: binary_sensor.workday_sensor
+    state: 'off'
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: '01'
+      sequence:
+      - service: mqtt.publish
+        data:
+          topic: zigbee2mqtt/hive_receiver/set
+          payload: '{"system_mode":"heat","temperature_setpoint_hold":"1","occupied_heating_setpoint":"{{
+            states(''input_number.thermtemp_01'') }}"}'
+    - conditions:
+      - condition: trigger
+        id: '02'
+      sequence:
+      - service: mqtt.publish
+        data:
+          topic: zigbee2mqtt/hive_receiver/set
+          payload: '{"system_mode":"heat","temperature_setpoint_hold":"1","occupied_heating_setpoint":"{{
+            states(''input_number.thermtemp_02'') }}"}'
+    - conditions:
+      - condition: trigger
+        id: '03'
+      sequence:
+      - service: mqtt.publish
+        data:
+          topic: zigbee2mqtt/hive_receiver/set
+          payload: '{"system_mode":"heat","temperature_setpoint_hold":"1","occupied_heating_setpoint":"{{
+            states(''input_number.thermtemp_03'') }}"}'
+    - conditions:
+      - condition: trigger
+        id: '04'
+      sequence:
+      - service: mqtt.publish
+        data:
+          topic: zigbee2mqtt/hive_receiver/set
+          payload: '{"system_mode":"heat","temperature_setpoint_hold":"1","occupied_heating_setpoint":"{{
+            states(''input_number.thermtemp_04'') }}"}'
+    default: []
+  mode: single
+- id: '1654944071060'
+  alias: Auto minimise menus
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.menu_select
+    to: security
+  - platform: state
+    entity_id:
+    - input_select.menu_select
+    to: energy
+  - platform: state
+    entity_id:
+    - input_select.menu_select
+    to: media
+  - platform: state
+    entity_id:
+    - input_select.menu_select
+    to: lights
+  - platform: state
+    entity_id:
+    - input_select.menu_select
+    to: weather
+  condition: []
+  action:
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - service: input_select.select_option
+    data:
+      option: blank
+    target:
+      entity_id: input_select.menu_select
+  mode: single
+- id: '1681469046924'
+  alias: Snapshot on front motion
+  description: Test
+  use_blueprint:
+    path: Stan-Gobien/CriticalCollapseOptionNotHomeMotionCameraSnapshotWithClickAction.yaml
+    input:
+      motion_sensor: binary_sensor.network_video_recorder_line_crossing_2
+      camera: camera.front_sd
+      notify_device: 4e2c496e7e2cc6328757eea386eee367
+      delay: 1
+      clickAction: /lovelace-mobile/cameras
+- id: '1692982986696'
+  alias: Turn LED device on when Hyperion light is activated
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.tv_leds
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: switch.tv_leds_component_led_device
+    state: 'off'
+  action:
+  - service: switch.turn_on
+    target:
+      entity_id: switch.tv_leds_component_led_device
+- id: '1692983124935'
+  alias: Turn LED device off when Hyperion light is activated
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.tv_leds
+    from: 'on'
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: switch.tv_leds_component_led_device
+    state: 'on'
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.tv_leds_component_led_device
+  mode: single
+- id: '1701384081509'
+  alias: Check fish lights
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:10:00'
+  condition:
+  - condition: state
+    entity_id: sensor.flex_status
+    state: 'on'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: light.fish_left
+      state: 'on'
+    - condition: state
+      entity_id: light.fish_right
+      state: 'on'
+    - condition: state
+      entity_id: light.fish_left
+      state: unavailable
+    - condition: state
+      entity_id: light.fish_right
+      state: unavailable
+    - condition: state
+      entity_id: light.fish_left
+      state: unknown
+    - condition: state
+      entity_id: light.fish_right
+      state: unknown
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.fish_left
+      - light.fish_right
+  mode: single
+- id: '1701948788144'
+  alias: 'Shopping Notification '
+  description: Asda
+  trigger:
+  - platform: zone
+    entity_id: device_tracker.sara_mobile
+    zone: zone.asda
+    event: enter
+  condition: []
+  action:
+  - service: todo.get_items
+    target:
+      entity_id: todo.shopping
+    data:
+      status: needs_action
+    response_variable: tobuy
+  - service: notify.mobile_app_steve_mobile
+    data:
+      title: Shopping
+      message: "{%- for item in tobuy['todo.shopping']['items'] %}\n  {{ item.summary
+        }}\n{%- endfor %}\n"
+      data:
+        actions:
+        - action: Shopping
+        - title: Done
+        persistent: true
+        tag: shopping
+  mode: single
+- id: '1701964382366'
+  alias: actionable Notifications
+  description: ''
+  trigger:
+  - event_data:
+      action: shopping
+    platform: event
+    event_type: html5_notification.clicked
+  condition: []
+  action:
+  - service: notify.mobile_app_steve_mobile
+    data: none
+  mode: single

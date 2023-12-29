@@ -1,0 +1,30 @@
+
+#WHICH DOORS ARE OPEN#
+
+  - platform: template
+    sensors:
+      doors_open:
+        value_template: >
+          {% set doors = expand('binary_sensor.back_door', 'binary_sensor.front_door', 'binary_sensor.shed_door', 'binary_sensor.living_room_door_contact', 'binary_sensor.shed_door', 'binary_sensor.internal_shed_door_contact')
+                  | selectattr('state', 'eq', 'on')
+                  | map(attribute='name') | list %}
+          {% set qty = doors | count %}
+          {% set p1 = 'are' if qty > 1 else 'is' %}
+          {% if qty == 0 %} 
+           No doors are open.
+          {% else %}
+           {{' and '.join((doors | join(', ')).rsplit(', ', 1))}} {{p1}} open.
+          {% endif %}
+          
+#NUMBER OF DOORS OPEN#
+
+  - platform: template
+    sensors:
+      doors_open_amount:
+        value_template: "{{ expand('group.door_sensors') | selectattr('state', 'eq' , 'on') | list | count }}"
+        icon_template: >-
+          {% if is_state("sensor.doors_open_amount", "0") %}
+            mdi:door
+          {% else %}
+            mdi:door-open
+          {% endif %}

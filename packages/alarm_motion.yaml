@@ -1,0 +1,79 @@
+
+mqtt:
+  binary_sensor:
+    - name: "Kitchen"
+      unique_id: kitchen_motion
+      device_class: motion
+      state_topic: "selfmon/vmod.010faa/prio/inputs/read/1001"
+      off_delay: 3
+      payload_on: "OPEN"
+      payload_off: "CLOSED"
+      
+    - name: "Dining room"
+      unique_id: dining_motion
+      device_class: motion
+      state_topic: "selfmon/vmod.010faa/prio/inputs/read/1002"
+      off_delay: 3
+      payload_on: "OPEN"
+      payload_off: "CLOSED"
+ 
+    - name: "Living Room"
+      device_class: motion
+      unique_id: living_motion
+      state_topic: "selfmon/vmod.010faa/prio/inputs/read/1003"
+      off_delay: 3
+      payload_on: "OPEN"
+      payload_off: "CLOSED"
+      
+    - name: "Upstairs"
+      device_class: motion
+      unique_id: upstairs_motion
+      state_topic: "selfmon/vmod.010faa/prio/inputs/read/1004"
+      off_delay: 3
+      payload_on: "OPEN"
+      payload_off: "CLOSED"
+      
+    - name: "Hall"
+      device_class: motion
+      unique_id: hall_motion
+      state_topic: "selfmon/vmod.010faa/prio/inputs/read/1011"
+      off_delay: 3
+      payload_on: "OPEN"
+      payload_off: "CLOSED"
+      
+    - name: "Shed Door"
+      device_class: door
+      unique_id: shed_door
+      state_topic: "selfmon/vmod.010faa/prio/inputs/read/1012"
+      payload_on: "OPEN"
+      payload_off: "CLOSED"
+      
+    - name: "Back Door"
+      device_class: door
+      unique_id: back_door
+      state_topic: "selfmon/vmod.010faa/prio/inputs/read/1013"
+      payload_on: "OPEN"
+      payload_off: "CLOSED"
+      
+    - name: "Front Door"
+      device_class: door
+      unique_id: front_door
+      state_topic: "selfmon/vmod.010faa/prio/inputs/read/1014" 
+      payload_on: "OPEN"
+      payload_off: "CLOSED"
+      
+    - name: "Shed Pir"
+      device_class: motion
+      unique_id: shed_motion
+      state_topic: "selfmon/vmod.010faa/prio/inputs/read/1015"
+      off_delay: 3
+      payload_on: "OPEN"
+      payload_off: "CLOSED"
+      
+    - name: "Gate"
+      device_class: safety
+      unique_id: gate
+      state_topic: "selfmon/vmod.010faa/prio/inputs/read/1022"   
+      payload_on: "OPEN"
+      payload_off: "CLOSED"
+      
