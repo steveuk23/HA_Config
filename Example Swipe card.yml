@@ -1,11 +1,12 @@
 # install the custom:swipe-card and custom:button-card from HACS#
 
-# 1.Copy and paste all this into Notepadd++ on a pc #
+# 1.Copy and paste everything from line 15 to 189 into Notepadd++ on a pc #
 # 2.To test this out go to Homeassistant settings/helpers  #
-# 3.Create a new dropdown helper and add 4 options lights,climate,media & blank and name the helper "menu_select" so you   #   should have a new entitiy called "input_select.menu_select" #
+# 3.Create a new dropdown helper and add 4 options lights,climate,media & blank and name the helper "menu_select" so you should have a new entitiy called "input_select.menu_select" #
 # 4.The parts you see below like "light.YOUR_LIGHT" change to one of your entities and repeat on all of them" #
-# 5.You may have to delete any line that has a Hashtag on it including all this (they're not important anyway) #
-# 6.Once you have changed everything and deleted things create a new "manual" card in home assistant and delete whats in   #   here and copy and paste and it should work with 3 cards that swipe and open different cards when clicked on. #
+# 5.You may have to delete any line that has a Hashtag on it (they're not important anyway) #
+# 6.Once you have changed everything and deleted things create a new "manual" card in home assistant and delete whats in here and copy and paste 
+    and it should work with 3 cards that swipe and open different cards when clicked on. #
 
 
 
