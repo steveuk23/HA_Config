@@ -1,0 +1,188 @@
+# install the custom:swipe-card and custom:button-card from HACS#
+
+# 1.Copy and paste all this into Notepadd++ on a pc #
+# 2.To test this out go to Homeassistant settings/helpers  #
+# 3.Create a new dropdown helper and add 4 options lights,climate,media & blank and name the helper "menu_select" so you   #   should have a new entitiy called "input_select.menu_select" #
+# 4.The parts you see below like "light.YOUR_LIGHT" change to one of your entities and repeat on all of them" #
+# 5.You may have to delete any line that has a Hashtag on it including all this (they're not important anyway) #
+# 6.Once you have changed everything and deleted things create a new "manual" card in home assistant and delete whats in   #   here and copy and paste and it should work with 3 cards that swipe and open different cards when clicked on. #
+
+
+
+
+
+type: vertical-stack
+cards:
+  - type: custom:swipe-card
+    card_width: 250px
+    start_card: 3
+    parameters:
+      effect: coverflow
+      grabCursor: true
+      centeredSlides: true
+      setWrapperSize: true
+      slideToClickedSlide: true
+      slidesPerView: auto
+      slideShadows: true
+      coverflowEffect:
+        rotate: 5
+        stretch: -5
+        depth: 150
+        modifier: 3
+        slideShadows: true
+      pagination:
+        type: none
+    style:
+      left: 50%
+      top: 65%
+      width: 96%
+      opacity: 100%
+      
+# CARD 1 #          
+    cards:
+      - type: custom:button-card
+        entity: light.YOUR_LIGHT
+        name: Lights
+        show_entity_picture: true
+        entity_picture: /local/images/icon/where_ever_your_image_is.png
+        tap_action:
+          action: call-service
+          service: input_select.select_option
+          service_data:
+            entity_id: input_select.menu_select
+            option: lights
+        double_tap_action:
+          action: call-service
+          service: input_select.select_option
+          service_data:
+            entity_id: input_select.menu_select
+            option: blank
+        styles:
+          card:
+            - height: 160px
+            - padding: 4%
+            - width: 250px
+            - border-radius: 25px
+            - border-width: 2px
+            - border-color: black
+            - border-style: solid
+            
+# CARD 2 #                
+      - type: custom:button-card
+        entity: media_player.YOUR_MEDIA_PLAYER
+        name: Media
+        show_entity_picture: true
+        entity_picture: entity_picture: (/local/images/icon/where_ever_your_image_is.png)
+        tap_action:
+          action: call-service
+          service: input_select.select_option
+          service_data:
+            entity_id: input_select.menu_select
+            option: media
+        double_tap_action:
+          action: call-service
+          service: input_select.select_option
+          service_data:
+            entity_id: input_select.menu_select
+            option: blank
+        styles:
+          card:
+            - height: 160px
+            - padding: 4%
+            - width: 250px
+            - border-radius: 25px
+            - border-width: 2px
+            - border-color: black
+            - border-style: solid
+            
+# CARD 3 #                
+      - type: custom:button-card
+        entity: climate.YOUR_THERMOSTAT
+        name: Climate
+        show_entity_picture: true
+        entity_picture: /local/images/icon/where_ever_your_image_is.png
+        tap_action:
+          action: call-service
+          service: input_select.select_option
+          service_data:
+            entity_id: input_select.menu_select
+            option: climate
+        double_tap_action:
+          action: call-service
+          service: input_select.select_option
+          service_data:
+            entity_id: input_select.menu_select
+            option: blank
+        styles:
+          card:
+            - height: 160px
+            - padding: 4%
+            - width: 250px
+            - border-radius: 25px
+            - border-width: 2px
+            - border-color: black
+            - border-style: solid
+
+# CONDITIONAL CARDS #
+
+# CONDITIONAL CARD 1 #
+  - type: conditional
+    conditions:
+      - entity: input_select.menu_select
+        state: lights
+    card:
+      type: conditional
+      conditions:
+        - entity: input_select.menu_select
+          state: lights
+      card:
+        type: entities 
+        title: Lights
+        show_header_toggle: false
+        entities:
+          - entities:
+              - light.YOUR_LIGHTS
+              - light.YOUR_LIGHTS
+              - light.YOUR_LIGHTS
+              - light.YOUR_LIGHTS
+            
+# CONDITIONAL CARD 2 #   
+  
+  - type: conditional
+    conditions:
+      - entity: input_select.menu_select
+        state: media
+    card:
+      type: entities
+      entities:
+        - entity: media_player.YOUR_MEDIA_PLAYER
+          name: Whatever Name you want
+        - entity: media_player.YOUR_MEDIA_PLAYER
+          name: Whatever Name you want           
+
+                  
+# CONDITIONAL CARD 3 #                      
+  - type: conditional
+    conditions:
+      - entity: input_select.menu_select
+        state: Climate
+    card:
+      type: thermostat
+      entity: climate.YOUR_THERMOSTAT
+      name: Heating
+
+# CONDITIONAL BLANK #             
+  - type: conditional
+    conditions:
+      - entity: input_select.menu_select
+        state: blank
+    card:
+      type: custom:button-card
+      show_name: false
+      show_icon: false
+      styles:
+        card:
+          - height: 1px
+          - background: none
+          - box-shadow: none
+          - border: none
