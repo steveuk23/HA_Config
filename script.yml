@@ -1,0 +1,17 @@
+alias: Delete All
+sequence:
+  - service: todo.get_items
+    response_variable: all_items
+    target:
+      entity_id: todo.fitness
+    data:
+      status: needs_action
+  - repeat:
+      count: "{{ all_items['todo.fitness']['items'] | count }}"
+      sequence:
+        - service: todo.remove_item
+          data:
+            item: "{{all_items['todo.fitness']['items'][repeat.index-1]['summary']}}"
+          target:
+            entity_id: todo.shopping
+mode: single
