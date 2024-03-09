@@ -1,0 +1,30 @@
+alias: "Fitness Notification "
+description: Remaining
+trigger:
+  - platform: time
+    at: "08:00:00"
+condition: []
+action:
+  - service: todo.get_items
+    target:
+      entity_id: todo.fitness
+    data:
+      status: needs_action
+    response_variable: todo
+  - service: notify.mobile_app_michael_iphone_12
+    data:
+      title: Fitness
+      message: |
+        {%- for item in todo['todo.fitness']['items'] %}
+          {{ item.summary }}
+        {%- endfor %}
+      data:
+        actions:
+          - action: deletelist
+            title: Done
+          - action: URI
+            title: Open List
+            uri: /todo?entity_id=todo.fitness
+        persistent: true
+        tag: fitness
+mode: single
