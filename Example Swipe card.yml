@@ -6,7 +6,7 @@
 # 4.The parts you see below like "light.YOUR_LIGHT" change to one of your entities and repeat on all of them" #
 # 5.You may have to delete any line that has a Hashtag on it (they're not important anyway) #
 # 6.Once you have changed everything and deleted things create a new "manual" card in home assistant and delete whats in here and copy and paste 
-    and it should work with 3 cards that swipe and open different cards when clicked on. #
+#   and it should work with 3 cards that swipe and open different cards when clicked on. #
 
 
 
