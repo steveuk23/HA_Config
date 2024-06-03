@@ -99,7 +99,7 @@ cards:
 # CARD 3 #                
       - type: custom:button-card
         entity: climate.YOUR_THERMOSTAT
-        name: Climate
+        name: climate
         show_entity_picture: true
         entity_picture: /local/images/icon/where_ever_your_image_is.png
         tap_action:
@@ -141,7 +141,6 @@ cards:
         title: Lights
         show_header_toggle: false
         entities:
-          - entities:
               - light.YOUR_LIGHTS
               - light.YOUR_LIGHTS
               - light.YOUR_LIGHTS
