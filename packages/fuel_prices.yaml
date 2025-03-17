@@ -1,0 +1,191 @@
+sensor:
+#TESCO#
+
+  - platform: rest
+    name: tesco_fuel_glossop
+    unique_id: fuel_glossop
+    resource: https://www.tesco.com/fuel_prices/fuel_prices_data.json
+    method: GET
+    json_attributes_path: "$.stations[?(@.site_id=='gcw85374xfbg')]"
+    json_attributes:
+      - brand
+      - address
+      - postcode
+      - location
+      - prices
+    headers:
+      user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+      accept-encoding: gzip, deflate, br, zstd
+    value_template: 'OK'
+    scan_interval: 10800
+    
+  - platform: rest
+    name: tesco_fuel_hattersley
+    unique_id: fuel_hattersley
+    resource: https://www.tesco.com/fuel_prices/fuel_prices_data.json
+    json_attributes_path: "$.stations[?(@.site_id=='gcw81fyk3kew')]"
+    method: GET
+    json_attributes:
+      - brand
+      - address
+      - postcode
+      - location
+      - prices
+    headers:
+      user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+      accept-encoding: gzip, deflate, br, zstd
+    value_template: 'OK'
+    scan_interval: 10800
+    
+  - platform: rest
+    name: tesco_fuel_stalybridge
+    unique_id: fuel_stalybridge
+    resource: https://www.tesco.com/fuel_prices/fuel_prices_data.json
+    method: GET
+    json_attributes_path: "$.stations[?(@.site_id=='gcw8320vz99g')]"
+    json_attributes:
+      - brand
+      - address
+      - postcode
+      - location
+      - prices
+    headers:
+      user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+      accept-encoding: gzip, deflate, br, zstd
+    value_template: 'OK'
+    scan_interval: 10800
+    
+#SAINSBURYS#
+    
+  - platform: rest
+    name: Sainsbury_Fuel_Prices
+    unique_id: sainburys_fuel_prices
+    resource: https://api.sainsburys.co.uk/v1/exports/latest/fuel_prices_data.json
+    json_attributes_path: "$.stations[?(@.site_id=='gcw821ez6mwm')]"
+    json_attributes:
+      - brand
+      - address
+      - postcode
+      - location
+      - prices
+    value_template: 'OK'
+    scan_interval: 10800
+
+#ASDA#
+
+  - platform: rest
+    name: asda_fuel_prices_ash
+    unique_id: asda_fuel_prices
+    resource: https://storelocator.asda.com/fuel_prices_data.json
+    json_attributes_path: "$.stations[?(@.site_id=='gcw822dkfw37')]"
+    json_attributes:
+      - brand
+      - address
+      - postcode
+      - location
+      - prices
+    value_template: 'OK'
+    scan_interval: 10800
+    
+  - platform: rest
+    name: asda_fuel_prices_sport
+    unique_id: asda_fuel_prices_sport
+    resource: https://storelocator.asda.com/fuel_prices_data.json
+    json_attributes_path: "$.stations[?(@.site_id=='gcw2q069jsyn')]"
+    json_attributes:
+      - brand
+      - address
+      - postcode
+      - location
+      - prices
+    value_template: 'OK'
+    scan_interval: 10800
+    
+#MORRISONS#
+
+  - platform: rest
+    name: morrisons_fuel_prices_hyde
+    unique_id: morrisons_fuel_prices_hyde
+    resource: https://fuel.motorfuelgroup.com/fuel_prices_data.json
+    json_attributes_path: "$.stations[?(@.site_id=='gcw80fex9pun')]"
+    json_attributes:
+      - brand
+      - address
+      - postcode
+      - location
+      - prices
+    value_template: 'OK'
+    scan_interval: 10800
+    
+  - platform: rest
+    name: morrisons_fuel_prices_duk
+    unique_id: morrisons_fuel_prices_duk
+    resource: https://fuel.motorfuelgroup.com/fuel_prices_data.json
+    json_attributes_path: "$.stations[?(@.site_id=='gcw80xjuc2mq')]"
+    json_attributes:
+      - brand
+      - address
+      - postcode
+      - location
+      - prices
+    value_template: 'OK'
+    scan_interval: 10800
+    
+template:
+  - sensor:
+  
+#TESCO#
+
+      - name: "Tesco Glossop Unleaded"
+        state: "{{ '%.2f' | format(state_attr('sensor.tesco_fuel_glossop', 'prices')['E10']) }}"
+        icon: mdi:gas-station
+        unique_id: fuel_glossop_id
+        state_class: measurement
+
+      - name: "Tesco Hattersley Unleaded"
+        state: "{{ '%.2f' | format(state_attr('sensor.tesco_fuel_hattersley', 'prices')['E10']) }}"       
+        unique_id: fuel_hattersley_id
+        icon: mdi:gas-station
+        state_class: measurement
+        
+      - name: "Tesco Stalybridge Unleaded"
+        state: "{{ '%.2f' | format(state_attr('sensor.tesco_fuel_stalybridge', 'prices')['E10']) }}"       
+        unique_id: fuel_stalybridge_id
+        icon: mdi:gas-station
+        state_class: measurement
+        
+#SAINSBURYS#
+        
+      - name: "Sainsburys Ashton Unleaded"
+        state: "{{ '%.2f' | format(state_attr('sensor.sainsbury_fuel_prices', 'prices')['E10']) }}"       
+        unique_id: fuel_sainsburys_ashton
+        icon: mdi:gas-station
+        state_class: measurement
+
+#ASDA#
+
+      - name: "Asda Ashton Unleaded"
+        state: "{{ '%.2f' | format(state_attr('sensor.asda_fuel_prices_ash', 'prices')['E10']) }}"      
+        unique_id: fuel_asda_ash
+        icon: mdi:gas-station
+        state_class: measurement
+        
+      - name: "Asda Sportscity Unleaded"
+        state: "{{ '%.2f' | format(state_attr('sensor.asda_fuel_prices_sport', 'prices')['E10']) }}"        
+        unique_id: fuel_asda_sport
+        icon: mdi:gas-station
+        state_class: measurement
+        
+#MORRISONS#
+
+      - name: "Morrisons Hyde Unleaded"
+        state: "{{ '%.2f' | format(state_attr('sensor.morrisons_fuel_prices_hyde', 'prices')['E10']) }}"       
+        unique_id: fuel_morrisons_id_hyde
+        icon: mdi:gas-station
+        state_class: measurement
+        
+      - name: "Morrisons Dukinfield Unleaded"
+        state: "{{ '%.2f' | format(state_attr('sensor.morrisons_fuel_prices_duk', 'prices')['E10']) }}"        
+        unique_id: fuel_morrisons_id_duk
+        icon: mdi:gas-station
+        state_class: measurement
