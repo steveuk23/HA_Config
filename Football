@@ -1,0 +1,117 @@
+type: custom:button-card
+entity: calendar.leeds_united_fixtures
+show_icon: false
+show_name: false
+styles:
+  card:
+    - font-size: 14px
+  grid:
+    - grid-template-areas: >
+        "h_crest home v_separator away a_crest" "h_crest competition competition
+        competition a_crest" "h_crest date date date a_crest" "h_crest time time
+        time a_crest"
+    - grid-template-columns: 1fr 1fr auto 1fr 1fr
+    - grid-template-rows: 1fr 1fr 1fr 1fr
+  custom_fields:
+    h_crest:
+      - display: inline-grid
+      - place-self: center
+      - align-self: center
+      - margin-top: 22px
+    a_crest:
+      - display: inline-grid
+      - place-self: center
+      - align-self: center
+      - margin-top: 22px
+    home:
+      - display: inline-grid
+      - align-self: center
+      - justify-self: end
+    v_separator:
+      - display: inline-grid
+      - align-self: center
+      - justify-self: center
+      - font-weight: bold
+    away:
+      - display: inline-grid
+      - align-self: center
+      - justify-self: start
+    competition:
+      - display: inline-grid
+      - align-self: center
+      - justify-self: center
+    date:
+      - display: inline-grid
+      - align-self: center
+      - justify-self: center
+    time:
+      - display: inline-grid
+      - align-self: center
+      - justify-self: center
+custom_fields:
+  h_crest: |
+    [[[  
+      const desc = entity.attributes.description || "";
+      const home = desc.split(" v ")[0].trim();
+      return `<img src="/local/images/PL/${home}.png" style="max-height: 70px; object-fit: contain;">`;
+    ]]]
+  a_crest: |
+    [[[  
+      const desc = entity.attributes.description || "";
+      const away = desc.split(" v ")[1]?.split(" - ")[0].trim();
+      return `<img src="/local/images/PL/${away}.png" style="max-height: 70px; object-fit: contain;">`;
+    ]]]
+  home: |
+    [[[  
+      const desc = entity.attributes.description || "";
+      const home = desc.split(" v ")[0].trim();
+      return `<span>${home}</span>`;
+    ]]]
+  v_separator: |
+    [[[ return `<span>&nbsp;v&nbsp;</span>`; ]]]
+  away: |
+    [[[  
+      const desc = entity.attributes.description || "";
+      const away = desc.split(" v ")[1]?.split(" - ")[0].trim();
+      return `<span>${away}</span>`;
+    ]]]
+  competition: |
+    [[[  
+      const desc = entity.attributes.description || "";
+      const parts = desc.split(" - ");
+      const comp = parts.length >= 3 ? parts[2].trim() : "";
+      return `<span>${comp}</span>`;
+    ]]]
+  date: |
+    [[[  
+      const start = new Date(entity.attributes.start_time);
+      const day = start.getDate();
+      const month = start.toLocaleString('en-GB', { month: 'long' });
+
+      function ordinal(d) {
+        if (d > 3 && d < 21) return 'th';
+        switch (d % 10) {
+          case 1: return 'st';
+          case 2: return 'nd';
+          case 3: return 'rd';
+          default: return 'th';
+        }
+      }
+
+      const today = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+
+      let label = `${day}${ordinal(day)} ${month}`;
+      if (start.toDateString() === today.toDateString()) label = "Today";
+      if (start.toDateString() === tomorrow.toDateString()) label = "Tomorrow";
+
+      return `<span>${label}</span>`;
+    ]]]
+  time: |
+    [[[  
+      const start = new Date(entity.attributes.start_time);
+      const time = start.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      return `<span>${time}</span>`;
+    ]]]
+
