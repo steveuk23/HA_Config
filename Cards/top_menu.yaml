@@ -1,0 +1,139 @@
+type: grid
+square: true
+columns: 5
+cards:
+  - type: custom:button-card
+    entity: light.room_lights
+    icon: mdi:lightbulb-group-outline
+    show_name: false
+    show_state: false
+    tap_action:
+      action: navigate
+      navigation_path: /test-new/lights
+    variables:
+      c: |
+        [[[ return entity.state === 'on' ? '#F5B301' : '#7D8FA5'; ]]]
+    styles:
+      card:
+        - width: 50px
+        - height: 50px
+        - border-radius: 50%
+        - padding: 0
+        - background: rgba(244, 249, 255, 0.85)
+        - border: '[[[ return "2px solid " + variables.c; ]]]'
+        - box-shadow: >-
+            rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+            -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+      icon:
+        - width: 26px
+        - color: '[[[ return variables.c; ]]]'
+  - type: custom:button-card
+    entity: sensor.flex_status
+    show_name: false
+    show_state: false
+    icon: |
+      [[[
+        const st = entity.state;
+        return st === 'Set' ? 'mdi:shield-lock' : st === 'Part Set' ? 'mdi:shield-half-full' : 'mdi:shield-off-outline';
+      ]]]
+    tap_action:
+      action: navigate
+      navigation_path: /test-new/Alarm
+    variables:
+      c: |
+        [[[
+          const bad = ['binary_sensor.water_leak_combi','binary_sensor.water_leak_fish','binary_sensor.water_leak_bathroom','switch.smoke'].some(i => states[i].state === 'on');
+          if (bad) return '#E5484D';
+          return entity.state === 'Set' ? '#2E9E6B' : entity.state === 'Part Set' ? '#E08A1E' : '#7D8FA5';
+        ]]]
+    styles:
+      card:
+        - width: 50px
+        - height: 50px
+        - border-radius: 50%
+        - padding: 0
+        - background: rgba(244, 249, 255, 0.85)
+        - border: '[[[ return "2px solid " + variables.c; ]]]'
+        - box-shadow: >-
+            rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+            -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+      icon:
+        - width: 26px
+        - color: '[[[ return variables.c; ]]]'
+  - type: custom:button-card
+    entity: climate.hive_receiver
+    icon: mdi:radiator
+    show_name: false
+    show_state: false
+    tap_action:
+      action: navigate
+      navigation_path: /test-new/heating
+    variables:
+      c: |
+        [[[
+          const heating = entity.attributes.hvac_action === 'heating' || states['sensor.running_state']?.state === 'emergency_heating';
+          return heating ? '#F28B50' : '#7D8FA5';
+        ]]]
+    styles:
+      card:
+        - width: 50px
+        - height: 50px
+        - border-radius: 50%
+        - padding: 0
+        - background: rgba(244, 249, 255, 0.85)
+        - border: '[[[ return "2px solid " + variables.c; ]]]'
+        - box-shadow: >-
+            rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+            -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+      icon:
+        - width: 26px
+        - color: '[[[ return variables.c; ]]]'
+  - type: custom:button-card
+    entity: sensor.daily_energy
+    icon: mdi:lightning-bolt
+    show_name: false
+    show_state: false
+    tap_action:
+      action: navigate
+      navigation_path: /test-new/energy
+    styles:
+      card:
+        - width: 50px
+        - height: 50px
+        - border-radius: 50%
+        - padding: 0
+        - background: rgba(244, 249, 255, 0.85)
+        - border: 2px solid
+        - box-shadow: >-
+            rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+            -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+      icon:
+        - width: 26px
+        - color: '#4A90E2'
+  - type: custom:button-card
+    entity: media_player.kitchen_display
+    icon: >
+      [[[ return entity.state === 'playing' ? 'mdi:cast-connected' : 'mdi:cast';
+      ]]]
+    show_name: false
+    show_state: false
+    tap_action:
+      action: navigate
+      navigation_path: /test-new/media
+    variables:
+      c: |
+        [[[ return entity.state === 'playing' ? '#4A90E2' : '#7D8FA5'; ]]]
+    styles:
+      card:
+        - width: 50px
+        - height: 50px
+        - border-radius: 50%
+        - padding: 0
+        - background: rgba(244, 249, 255, 0.85)
+        - border: '[[[ return "2px solid " + variables.c; ]]]'
+        - box-shadow: >-
+            rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+            -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+      icon:
+        - width: 26px
+        - color: '[[[ return variables.c; ]]]'

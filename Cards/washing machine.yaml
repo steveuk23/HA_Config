@@ -1,0 +1,98 @@
+type: custom:button-card
+entity: sensor.washing_machine_machine_status
+triggers_update:
+  - sensor.washing_machine_machine_status
+  - sensor.washing_machine_door_status
+  - sensor.washing_machine_selected_program
+  - sensor.washing_machine_remaining_time_of_selected_program
+  - switch.washing_machine_child_lock
+show_icon: false
+show_name: false
+show_state: false
+grid_options:
+  columns: full
+tap_action:
+  action: more-info
+extra_styles: >
+  @keyframes wobble { 0%, 100% { transform: rotate(-2deg); } 50% { transform:
+  rotate(2deg); } }
+styles:
+  card:
+    - padding: 14px 16px
+  grid:
+    - grid-template-areas: '"content"'
+    - grid-template-columns: minmax(0, 1fr)
+  custom_fields:
+    content:
+      - justify-self: stretch
+custom_fields:
+  content: |
+    [[[
+      const st = id => (states[id] ? states[id].state : 'unavailable');
+      const pretty = s => String(s).replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+      const isOff = v => String(v).toLowerCase() === 'unavailable';
+      const blank = v => ['unknown', 'none', ''].includes(String(v).toLowerCase());
+
+      const machine = st('sensor.washing_machine_machine_status');
+      const door = st('sensor.washing_machine_door_status');
+      const prog = st('sensor.washing_machine_selected_program');
+      const time = st('sensor.washing_machine_remaining_time_of_selected_program');
+      const lock = st('switch.washing_machine_child_lock');
+
+      const off = isOff(machine);
+      const m = String(machine).toLowerCase();
+      let col = '#7D8FA5';
+      let label = off ? 'Turned Off' : blank(machine) ? 'Idle' : pretty(machine);
+      let running = false;
+      if (!off) {
+        if (/run|wash|rins|spin|active|progress/.test(m)) { col = '#4A90E2'; running = true; }
+        else if (/finish|end|done|complete/.test(m)) col = '#2E9E6B';
+        else if (/error|fault|alarm|fail/.test(m)) col = '#E5484D';
+        else if (/pause|delay/.test(m)) col = '#E08A1E';
+        else col = '#6B8CB0';
+      }
+
+      const val = (v, fmt) => isOff(v) ? ['Turned Off', true] : blank(v) ? ['--', true] : [fmt(v), false];
+      const fmtTime = v => {
+        const n = parseFloat(v);
+        if (isNaN(n)) return pretty(v);
+        return n >= 60 ? Math.floor(n / 60) + 'h ' + Math.round(n % 60) + 'm' : Math.round(n) + ' min';
+      };
+      const fmtProg = v => pretty(String(v).replace(/^.*program[ _]/i, ''));
+      const doorOpen = String(door).toLowerCase() === 'open';
+      const locked = String(lock).toLowerCase() === 'on';
+
+      const tiles = [
+        ['mdi:tshirt-crew', 'Program', val(prog, fmtProg)],
+        ['mdi:timer-sand', 'Time left', val(time, fmtTime)],
+        [doorOpen ? 'mdi:door-open' : 'mdi:door-closed', 'Door', val(door, pretty)],
+        [locked ? 'mdi:lock' : 'mdi:lock-open-variant-outline', 'Child lock', val(lock, v => (String(v).toLowerCase() === 'on' ? 'Locked' : 'Unlocked'))]
+      ];
+
+      const tile = ([icon, name, [text, dim]]) => `
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.8);min-width:0">
+          <ha-icon icon="${icon}" style="--mdc-icon-size:24px;flex:0 0 auto;color:${dim ? '#9AA7B5' : '#4A90E2'}"></ha-icon>
+          <div style="min-width:0;text-align:left">
+            <div style="font-size:11px;color:var(--secondary-text-color)">${name}</div>
+            <div style="font-size:15px;font-weight:600;line-height:1.2;color:${dim ? 'var(--secondary-text-color)' : 'var(--primary-text-color)'}">${text}</div>
+          </div>
+        </div>`;
+
+      const shadow = 'rgba(0,0,0,0.4) 0px 2px 4px, rgba(0,0,0,0.3) 0px 2px 13px -1px, rgba(0,0,0,0.2) 0px -3px 5px inset';
+      const imgStyle = 'width:72%;height:72%;object-fit:contain;' + (off ? 'filter:grayscale(1);opacity:0.5;' : '') + (running ? 'animation:wobble 0.5s ease-in-out infinite;' : '');
+
+      return `
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="flex:0 0 auto;width:96px;height:96px;border-radius:50%;background:rgba(244,249,255,0.85);border:3px solid ${col};box-shadow:${shadow};display:flex;align-items:center;justify-content:center">
+            <img src="/local/images/icon/washer.png" style="${imgStyle}">
+          </div>
+          <div style="min-width:0;text-align:left">
+            <div style="font-size:13px;color:var(--secondary-text-color)">Washing machine</div>
+            <div style="display:inline-block;margin-top:6px;padding:4px 14px;border-radius:999px;font-size:18px;font-weight:700;background:${col}26;color:${col}">${label}</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-top:14px">
+          ${tiles.map(tile).join('')}
+        </div>
+      `;
+    ]]]

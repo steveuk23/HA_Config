@@ -1,0 +1,321 @@
+type: custom:button-card
+entity: climate.hive_receiver
+show_icon: false
+show_name: false
+show_state: false
+grid_options:
+  columns: full
+tap_action:
+  action: more-info
+styles:
+  card:
+    - padding: 14px 16px
+  grid:
+    - grid-template-areas: '"hd hd hd" "tgt tgt tgt" "b30 b45 b60" "stop stop stop"'
+    - grid-template-columns: repeat(3, minmax(0, 1fr))
+    - column-gap: 10px
+    - row-gap: 10px
+  custom_fields:
+    hd:
+      - justify-self: stretch
+    tgt:
+      - justify-self: stretch
+    stop:
+      - justify-self: stretch
+custom_fields:
+  hd: |
+    [[[
+      const c = states['climate.hive_receiver'];
+      const a = c ? c.attributes : {};
+      const boost = ['timer.boost_30', 'timer.boost_45', 'timer.boost_60'].some(i => states[i] && states[i].state === 'active');
+      const heating = a.hvac_action === 'heating';
+      const cur = a.current_temperature;
+      const r = states['sensor.boost_remaining'] ? states['sensor.boost_remaining'].state : '';
+      const ru = states['sensor.boost_remaining'] && states['sensor.boost_remaining'].attributes.unit_of_measurement ? ' ' + states['sensor.boost_remaining'].attributes.unit_of_measurement : '';
+      const haveR = r && !['unknown', 'unavailable', 'none', '0'].includes(String(r).toLowerCase());
+      const col = boost || heating ? '#E08A1E' : '#7D8FA5';
+      const label = boost ? 'Boost on' : heating ? 'Heating' : 'Idle';
+      const ends = boost && haveR ? 'Boost ends in ' + r + ru : '';
+      const num = v => (v !== undefined && v !== null && !isNaN(parseFloat(v))) ? String(Math.round(parseFloat(v) * 10) / 10) : '--';
+      return `
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:12px;margin-bottom:2px">
+          <div style="text-align:left">
+            <div style="text-align:left;font-size:13px;color:var(--secondary-text-color)"><ha-icon icon="mdi:fire" style="--mdc-icon-size:18px;color:${col};vertical-align:middle;margin-right:4px"></ha-icon><span style="vertical-align:middle">Heating</span></div>
+            <div style="display:inline-block;margin-top:6px;padding:3px 12px;border-radius:999px;font-size:15px;font-weight:700;background:${col}26;color:${col}">${label}</div>
+            ${ends ? `<div style="text-align:left;font-size:13px;font-weight:600;color:#E08A1E;margin-top:6px">${ends}</div>` : ''}
+          </div>
+          <div style="text-align:right">
+            <div style="line-height:1;color:var(--primary-text-color)"><span style="font-size:36px;font-weight:700">${num(cur)}</span><span style="font-size:20px;font-weight:600">\u00b0C</span></div>
+            <div style="font-size:12px;color:var(--secondary-text-color);margin-top:2px">Current</div>
+          </div>
+        </div>
+      `;
+    ]]]
+  tgt:
+    card:
+      type: custom:button-card
+      entity: climate.hive_receiver
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - padding: 6px 8px
+          - border-radius: 16px
+          - background: rgba(255, 255, 255, 0.55)
+          - border: 1px solid rgba(255, 255, 255, 0.8)
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"m t p"'
+          - grid-template-columns: 44px minmax(0, 1fr) 44px
+          - align-items: center
+        custom_fields:
+          m:
+            - justify-self: center
+          t:
+            - justify-self: stretch
+          p:
+            - justify-self: center
+      custom_fields:
+        t: |
+          [[[
+            const a = states['climate.hive_receiver'] ? states['climate.hive_receiver'].attributes : {};
+            const v = parseFloat(a.temperature);
+            const txt = isNaN(v) ? '--' : String(Math.round(v * 10) / 10);
+            return `<div style="text-align:center;line-height:1.2"><div style="font-size:12px;color:var(--secondary-text-color)">Target</div><div style="font-size:24px;font-weight:700;color:var(--primary-text-color)">${txt}\u00b0C</div></div>`;
+          ]]]
+        m:
+          card:
+            type: custom:button-card
+            icon: mdi:minus
+            show_name: false
+            show_state: false
+            tap_action:
+              action: call-service
+              service: climate.set_temperature
+              service_data:
+                entity_id: climate.hive_receiver
+                temperature: |-
+                  [[[
+                    const a = states['climate.hive_receiver'].attributes;
+                    const t = parseFloat(a.temperature) - 0.5;
+                    return Math.round(Math.max(t, a.min_temp || 5) * 10) / 10;
+                  ]]]
+            styles:
+              card:
+                - width: 40px
+                - height: 40px
+                - border-radius: 50%
+                - padding: 0
+                - background: rgba(244, 249, 255, 0.85)
+                - border: 2px solid rgba(74, 144, 226, 0.5)
+                - box-shadow: >-
+                    rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px
+                    13px -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+              icon:
+                - width: 22px
+                - color: '#4A90E2'
+        p:
+          card:
+            type: custom:button-card
+            icon: mdi:plus
+            show_name: false
+            show_state: false
+            tap_action:
+              action: call-service
+              service: climate.set_temperature
+              service_data:
+                entity_id: climate.hive_receiver
+                temperature: |-
+                  [[[
+                    const a = states['climate.hive_receiver'].attributes;
+                    const t = parseFloat(a.temperature) + 0.5;
+                    return Math.round(Math.min(t, a.max_temp || 32) * 10) / 10;
+                  ]]]
+            styles:
+              card:
+                - width: 40px
+                - height: 40px
+                - border-radius: 50%
+                - padding: 0
+                - background: rgba(244, 249, 255, 0.85)
+                - border: 2px solid rgba(224, 138, 30, 0.55)
+                - box-shadow: >-
+                    rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px
+                    13px -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+              icon:
+                - width: 22px
+                - color: '#E08A1E'
+  b30:
+    card:
+      type: custom:button-card
+      entity: script.boost
+      icon: mdi:fire
+      name: 30 min
+      tap_action:
+        action: toggle
+      styles:
+        card:
+          - height: 72px
+          - border-radius: 14px
+          - padding: 6px
+          - box-shadow: none !important
+          - opacity: |-
+              [[[
+                const on = states['timer.boost_30'] && states['timer.boost_30'].state === 'active';
+                const any = ['timer.boost_30', 'timer.boost_45', 'timer.boost_60'].some(i => states[i] && states[i].state === 'active');
+                return any && !on ? '0.55' : '1';
+              ]]]
+          - background: |-
+              [[[
+                const on = states['timer.boost_30'] && states['timer.boost_30'].state === 'active';
+                return on ? 'rgba(224,138,30,0.22)' : 'rgba(255,255,255,0.55)';
+              ]]]
+          - border: |-
+              [[[
+                const on = states['timer.boost_30'] && states['timer.boost_30'].state === 'active';
+                return on ? '2px solid #E08A1E' : '1px solid rgba(255,255,255,0.8)';
+              ]]]
+        icon:
+          - width: 28px
+          - color: |-
+              [[[
+                const on = states['timer.boost_30'] && states['timer.boost_30'].state === 'active';
+                return on ? '#E08A1E' : '#7D8FA5';
+              ]]]
+          - animation: |-
+              [[[
+                const on = states['timer.boost_30'] && states['timer.boost_30'].state === 'active';
+                return on ? 'blink 1.5s ease infinite' : 'none';
+              ]]]
+        name:
+          - font-size: 14px
+          - font-weight: 600
+          - color: var(--primary-text-color)
+  b45:
+    card:
+      type: custom:button-card
+      entity: script.1611181589757
+      icon: mdi:fire
+      name: 45 min
+      tap_action:
+        action: toggle
+      styles:
+        card:
+          - height: 72px
+          - border-radius: 14px
+          - padding: 6px
+          - box-shadow: none !important
+          - opacity: |-
+              [[[
+                const on = states['timer.boost_45'] && states['timer.boost_45'].state === 'active';
+                const any = ['timer.boost_30', 'timer.boost_45', 'timer.boost_60'].some(i => states[i] && states[i].state === 'active');
+                return any && !on ? '0.55' : '1';
+              ]]]
+          - background: |-
+              [[[
+                const on = states['timer.boost_45'] && states['timer.boost_45'].state === 'active';
+                return on ? 'rgba(224,138,30,0.22)' : 'rgba(255,255,255,0.55)';
+              ]]]
+          - border: |-
+              [[[
+                const on = states['timer.boost_45'] && states['timer.boost_45'].state === 'active';
+                return on ? '2px solid #E08A1E' : '1px solid rgba(255,255,255,0.8)';
+              ]]]
+        icon:
+          - width: 28px
+          - color: |-
+              [[[
+                const on = states['timer.boost_45'] && states['timer.boost_45'].state === 'active';
+                return on ? '#E08A1E' : '#7D8FA5';
+              ]]]
+          - animation: |-
+              [[[
+                const on = states['timer.boost_45'] && states['timer.boost_45'].state === 'active';
+                return on ? 'blink 1.5s ease infinite' : 'none';
+              ]]]
+        name:
+          - font-size: 14px
+          - font-weight: 600
+          - color: var(--primary-text-color)
+  b60:
+    card:
+      type: custom:button-card
+      entity: script.1611181628914
+      icon: mdi:fire
+      name: 60 min
+      tap_action:
+        action: toggle
+      styles:
+        card:
+          - height: 72px
+          - border-radius: 14px
+          - padding: 6px
+          - box-shadow: none !important
+          - opacity: |-
+              [[[
+                const on = states['timer.boost_60'] && states['timer.boost_60'].state === 'active';
+                const any = ['timer.boost_30', 'timer.boost_45', 'timer.boost_60'].some(i => states[i] && states[i].state === 'active');
+                return any && !on ? '0.55' : '1';
+              ]]]
+          - background: |-
+              [[[
+                const on = states['timer.boost_60'] && states['timer.boost_60'].state === 'active';
+                return on ? 'rgba(224,138,30,0.22)' : 'rgba(255,255,255,0.55)';
+              ]]]
+          - border: |-
+              [[[
+                const on = states['timer.boost_60'] && states['timer.boost_60'].state === 'active';
+                return on ? '2px solid #E08A1E' : '1px solid rgba(255,255,255,0.8)';
+              ]]]
+        icon:
+          - width: 28px
+          - color: |-
+              [[[
+                const on = states['timer.boost_60'] && states['timer.boost_60'].state === 'active';
+                return on ? '#E08A1E' : '#7D8FA5';
+              ]]]
+          - animation: |-
+              [[[
+                const on = states['timer.boost_60'] && states['timer.boost_60'].state === 'active';
+                return on ? 'blink 1.5s ease infinite' : 'none';
+              ]]]
+        name:
+          - font-size: 14px
+          - font-weight: 600
+          - color: var(--primary-text-color)
+  stop:
+    card:
+      type: custom:button-card
+      entity: script.stop_boost
+      icon: mdi:stop-circle-outline
+      name: Stop boost
+      layout: icon_name
+      tap_action:
+        action: toggle
+      styles:
+        grid:
+          - grid-template-columns: auto auto
+          - column-gap: 8px
+          - justify-content: center
+          - align-items: center
+        card:
+          - height: 48px
+          - border-radius: 14px
+          - padding: 0 16px
+          - background: rgba(229, 72, 77, 0.16)
+          - border: 2px solid rgba(229, 72, 77, 0.7)
+          - box-shadow: none !important
+          - display: |-
+              [[[
+                return ['timer.boost_30', 'timer.boost_45', 'timer.boost_60'].some(i => states[i] && states[i].state === 'active') ? 'block' : 'none';
+              ]]]
+        icon:
+          - width: 24px
+          - color: '#E5484D'
+        name:
+          - font-size: 16px
+          - font-weight: 700
+          - color: '#E5484D'

@@ -1,0 +1,76 @@
+type: custom:button-card
+entity: calendar.leeds_united_fixtures
+show_icon: false
+show_name: false
+show_state: false
+tap_action:
+  action: more-info
+styles:
+  card:
+    - padding: 14px 12px
+  grid:
+    - grid-template-areas: '"content"'
+    - grid-template-columns: minmax(0, 1fr)
+  custom_fields:
+    content:
+      - justify-self: stretch
+custom_fields:
+  content: |
+    [[[
+      const a = entity.attributes || {};
+      const desc = a.description || '';
+      if (!a.start_time || !desc) {
+        return `<div style="text-align:center;padding:14px;color:var(--secondary-text-color)">No upcoming fixture</div>`;
+      }
+      const home = desc.split(' v ')[0].trim();
+      const away = (desc.split(' v ')[1] || '').split(' - ')[0].trim();
+      const parts = desc.split(' - ');
+      const comp = parts.length >= 3 ? parts[2].trim() : '';
+      const isHome = home.toLowerCase().includes('leeds');
+
+      const start = new Date(String(a.start_time).replace(' ', 'T'));
+      const now = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(now.getDate() + 1);
+      const ordinal = d => {
+        if (d > 3 && d < 21) return 'th';
+        return ['th', 'st', 'nd', 'rd'][d % 10] || 'th';
+      };
+      let dateLabel = start.getDate() + ordinal(start.getDate()) + ' ' + start.toLocaleString('en-GB', { month: 'short' });
+      if (start.toDateString() === now.toDateString()) dateLabel = 'Today';
+      if (start.toDateString() === tomorrow.toDateString()) dateLabel = 'Tomorrow';
+      const time = start.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+      const ms = start - now;
+      let countdown = 'In progress';
+      if (ms > 0) {
+        const mins = Math.floor(ms / 60000);
+        const days = Math.floor(mins / 1440);
+        const hrs = Math.floor((mins % 1440) / 60);
+        countdown = days >= 1 ? 'in ' + days + ' day' + (days === 1 ? '' : 's') : hrs >= 1 ? 'in ' + hrs + 'h ' + (mins % 60) + 'm' : 'in ' + mins + 'm';
+      }
+
+      const shadow = 'rgba(0,0,0,0.4) 0px 2px 4px, rgba(0,0,0,0.3) 0px 2px 13px -1px, rgba(0,0,0,0.2) 0px -3px 5px inset';
+      const side = t => `
+        <div>
+          <div style="width:76px;height:76px;border-radius:50%;background:rgba(244,249,255,0.85);border:2px solid rgba(255,255,255,0.9);box-shadow:${shadow};display:flex;align-items:center;justify-content:center;margin:0 auto">
+            <img src="/local/images/PL/${t}.png" style="max-width:52px;max-height:52px;object-fit:contain">
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--primary-text-color);text-align:center;margin-top:8px;line-height:1.2">${t}</div>
+        </div>`;
+      const pill = (t, bg, c) => `<div style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:${bg};color:${c};margin:2px 0">${t}</div>`;
+
+      return `
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr);gap:6px;align-items:start;white-space:normal">
+          ${side(home)}
+          <div style="text-align:center;align-self:center">
+            ${comp ? pill(comp, 'rgba(74,144,226,0.15)', '#2F6DB5') : ''}
+            <div style="font-size:20px;font-weight:700;color:var(--primary-text-color);margin-top:4px">${dateLabel}</div>
+            <div style="font-size:16px;color:var(--secondary-text-color)">${time}</div>
+            <div style="font-size:12px;font-weight:600;color:#4A90E2;margin:2px 0 4px">${countdown}</div>
+            ${pill(isHome ? 'HOME' : 'AWAY', isHome ? 'rgba(46,158,107,0.18)' : 'rgba(224,138,30,0.18)', isHome ? '#2E9E6B' : '#E08A1E')}
+          </div>
+          ${side(away)}
+        </div>
+      `;
+    ]]]

@@ -1,0 +1,772 @@
+type: custom:button-card
+show_icon: false
+show_name: false
+show_state: false
+grid_options:
+  columns: full
+tap_action:
+  action: none
+styles:
+  card:
+    - padding: 14px 16px
+  grid:
+    - grid-template-areas: >-
+        "hd hd hd hd" "n1 m1 v1 p1" "n2 m2 v2 p2" "n3 m3 v3 p3" "n4 m4 v4 p4"
+        "n5 m5 v5 p5" "n6 m6 v6 p6"
+    - grid-template-columns: minmax(0, 1.3fr) 44px minmax(0, 1fr) 44px
+    - column-gap: 8px
+    - row-gap: 10px
+  custom_fields:
+    hd:
+      - justify-self: start
+      - text-align: left
+custom_fields:
+  hd: |
+    [[[
+      return `
+        <div style="text-align:left;margin-bottom:4px">
+          <div style="text-align:left;font-size:20px;font-weight:700;color:var(--primary-text-color);line-height:28px">
+            <ha-icon icon="mdi:radiator" style="--mdc-icon-size:24px;color:#E08A1E;vertical-align:middle;margin-right:8px"></ha-icon><span style="vertical-align:middle">Heating schedule</span>
+          </div>
+          <div style="text-align:left;font-size:12px;color:var(--secondary-text-color);margin-top:2px">Tap a time or temperature to edit it, or use - and +</div>
+        </div>
+      `;
+    ]]]
+  n1:
+    card:
+      type: custom:button-card
+      entity: input_datetime.thermsched_01
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 56px
+          - padding: 0
+          - background: none
+          - border: none
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"t"'
+          - grid-template-columns: minmax(0, 1fr)
+        custom_fields:
+          t:
+            - justify-self: stretch
+      custom_fields:
+        t: |
+          [[[
+            const id = 'input_datetime.thermsched_01';
+            const ids = [1, 2, 3, 4, 5, 6].map(k => 'input_datetime.thermsched_0' + k);
+            const mm = s => { const p = String(s).split(' ').pop().split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]); };
+            const d = new Date(); const now = d.getHours() * 60 + d.getMinutes();
+            const mins = ids.map(i => mm(states[i] ? states[i].state : ''));
+            let bi = -1, best = -1;
+            mins.forEach((v, k) => { if (v <= now && v > best) { best = v; bi = k; } });
+            if (bi < 0) mins.forEach((v, k) => { if (v > best) { best = v; bi = k; } });
+            const on = ids[bi] === id;
+            const s = String(states[id] ? states[id].state : '').split(' ').pop();
+            const time = /^\d/.test(s) ? s.slice(0, 5) : s;
+            const box = 'box-sizing:border-box;height:56px;border-radius:14px;padding:6px 12px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;';
+            const look = on ? 'background:rgba(74,144,226,0.22);border:2px solid #4A90E2' : 'background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.8)';
+            return `<div style="${box}${look}"><div style="font-size:12px;line-height:1.2;color:var(--secondary-text-color)">Morning</div><div style="font-size:20px;line-height:1.2;font-weight:700;color:var(--primary-text-color)">${time}</div></div>`;
+          ]]]
+  m1:
+    card:
+      type: custom:button-card
+      icon: mdi:minus
+      show_name: false
+      show_state: false
+      tap_action:
+        action: call-service
+        service: input_number.decrement
+        service_data:
+          entity_id: input_number.thermtemp_01
+      styles:
+        card:
+          - width: 40px
+          - height: 40px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: 2px solid rgba(74, 144, 226, 0.5)
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 22px
+          - color: '#4A90E2'
+  v1:
+    card:
+      type: custom:button-card
+      entity: input_number.thermtemp_01
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 56px
+          - padding: 0
+          - background: none
+          - border: none
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"t"'
+          - grid-template-columns: minmax(0, 1fr)
+        custom_fields:
+          t:
+            - justify-self: stretch
+      custom_fields:
+        t: |
+          [[[
+            const o = states['input_number.thermtemp_01'];
+            const v = o ? parseFloat(o.state) : NaN;
+            const h = isNaN(v) ? 0 : Math.round(210 - 190 * Math.min(Math.max((v - 14) / 10, 0), 1));
+            const bg = isNaN(v) ? 'rgba(255,255,255,0.55)' : 'hsla(' + h + ',85%,72%,0.4)';
+            const col = isNaN(v) ? 'var(--secondary-text-color)' : 'hsl(' + h + ',65%,32%)';
+            const txt = isNaN(v) ? '--' : (Math.round(v * 10) / 10) + '\u00b0';
+            return `<div style="box-sizing:border-box;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:${bg};border:1px solid rgba(255,255,255,0.8);font-size:24px;font-weight:700;color:${col}">${txt}</div>`;
+          ]]]
+  p1:
+    card:
+      type: custom:button-card
+      icon: mdi:plus
+      show_name: false
+      show_state: false
+      tap_action:
+        action: call-service
+        service: input_number.increment
+        service_data:
+          entity_id: input_number.thermtemp_01
+      styles:
+        card:
+          - width: 40px
+          - height: 40px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: 2px solid rgba(224, 138, 30, 0.55)
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 22px
+          - color: '#E08A1E'
+  n2:
+    card:
+      type: custom:button-card
+      entity: input_datetime.thermsched_02
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 56px
+          - padding: 0
+          - background: none
+          - border: none
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"t"'
+          - grid-template-columns: minmax(0, 1fr)
+        custom_fields:
+          t:
+            - justify-self: stretch
+      custom_fields:
+        t: |
+          [[[
+            const id = 'input_datetime.thermsched_02';
+            const ids = [1, 2, 3, 4, 5, 6].map(k => 'input_datetime.thermsched_0' + k);
+            const mm = s => { const p = String(s).split(' ').pop().split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]); };
+            const d = new Date(); const now = d.getHours() * 60 + d.getMinutes();
+            const mins = ids.map(i => mm(states[i] ? states[i].state : ''));
+            let bi = -1, best = -1;
+            mins.forEach((v, k) => { if (v <= now && v > best) { best = v; bi = k; } });
+            if (bi < 0) mins.forEach((v, k) => { if (v > best) { best = v; bi = k; } });
+            const on = ids[bi] === id;
+            const s = String(states[id] ? states[id].state : '').split(' ').pop();
+            const time = /^\d/.test(s) ? s.slice(0, 5) : s;
+            const box = 'box-sizing:border-box;height:56px;border-radius:14px;padding:6px 12px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;';
+            const look = on ? 'background:rgba(74,144,226,0.22);border:2px solid #4A90E2' : 'background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.8)';
+            return `<div style="${box}${look}"><div style="font-size:12px;line-height:1.2;color:var(--secondary-text-color)">Mid-Morning</div><div style="font-size:20px;line-height:1.2;font-weight:700;color:var(--primary-text-color)">${time}</div></div>`;
+          ]]]
+  m2:
+    card:
+      type: custom:button-card
+      icon: mdi:minus
+      show_name: false
+      show_state: false
+      tap_action:
+        action: call-service
+        service: input_number.decrement
+        service_data:
+          entity_id: input_number.thermtemp_02
+      styles:
+        card:
+          - width: 40px
+          - height: 40px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: 2px solid rgba(74, 144, 226, 0.5)
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 22px
+          - color: '#4A90E2'
+  v2:
+    card:
+      type: custom:button-card
+      entity: input_number.thermtemp_02
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 56px
+          - padding: 0
+          - background: none
+          - border: none
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"t"'
+          - grid-template-columns: minmax(0, 1fr)
+        custom_fields:
+          t:
+            - justify-self: stretch
+      custom_fields:
+        t: |
+          [[[
+            const o = states['input_number.thermtemp_02'];
+            const v = o ? parseFloat(o.state) : NaN;
+            const h = isNaN(v) ? 0 : Math.round(210 - 190 * Math.min(Math.max((v - 14) / 10, 0), 1));
+            const bg = isNaN(v) ? 'rgba(255,255,255,0.55)' : 'hsla(' + h + ',85%,72%,0.4)';
+            const col = isNaN(v) ? 'var(--secondary-text-color)' : 'hsl(' + h + ',65%,32%)';
+            const txt = isNaN(v) ? '--' : (Math.round(v * 10) / 10) + '\u00b0';
+            return `<div style="box-sizing:border-box;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:${bg};border:1px solid rgba(255,255,255,0.8);font-size:24px;font-weight:700;color:${col}">${txt}</div>`;
+          ]]]
+  p2:
+    card:
+      type: custom:button-card
+      icon: mdi:plus
+      show_name: false
+      show_state: false
+      tap_action:
+        action: call-service
+        service: input_number.increment
+        service_data:
+          entity_id: input_number.thermtemp_02
+      styles:
+        card:
+          - width: 40px
+          - height: 40px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: 2px solid rgba(224, 138, 30, 0.55)
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 22px
+          - color: '#E08A1E'
+  n3:
+    card:
+      type: custom:button-card
+      entity: input_datetime.thermsched_03
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 56px
+          - padding: 0
+          - background: none
+          - border: none
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"t"'
+          - grid-template-columns: minmax(0, 1fr)
+        custom_fields:
+          t:
+            - justify-self: stretch
+      custom_fields:
+        t: |
+          [[[
+            const id = 'input_datetime.thermsched_03';
+            const ids = [1, 2, 3, 4, 5, 6].map(k => 'input_datetime.thermsched_0' + k);
+            const mm = s => { const p = String(s).split(' ').pop().split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]); };
+            const d = new Date(); const now = d.getHours() * 60 + d.getMinutes();
+            const mins = ids.map(i => mm(states[i] ? states[i].state : ''));
+            let bi = -1, best = -1;
+            mins.forEach((v, k) => { if (v <= now && v > best) { best = v; bi = k; } });
+            if (bi < 0) mins.forEach((v, k) => { if (v > best) { best = v; bi = k; } });
+            const on = ids[bi] === id;
+            const s = String(states[id] ? states[id].state : '').split(' ').pop();
+            const time = /^\d/.test(s) ? s.slice(0, 5) : s;
+            const box = 'box-sizing:border-box;height:56px;border-radius:14px;padding:6px 12px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;';
+            const look = on ? 'background:rgba(74,144,226,0.22);border:2px solid #4A90E2' : 'background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.8)';
+            return `<div style="${box}${look}"><div style="font-size:12px;line-height:1.2;color:var(--secondary-text-color)">Midday</div><div style="font-size:20px;line-height:1.2;font-weight:700;color:var(--primary-text-color)">${time}</div></div>`;
+          ]]]
+  m3:
+    card:
+      type: custom:button-card
+      icon: mdi:minus
+      show_name: false
+      show_state: false
+      tap_action:
+        action: call-service
+        service: input_number.decrement
+        service_data:
+          entity_id: input_number.thermtemp_03
+      styles:
+        card:
+          - width: 40px
+          - height: 40px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: 2px solid rgba(74, 144, 226, 0.5)
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 22px
+          - color: '#4A90E2'
+  v3:
+    card:
+      type: custom:button-card
+      entity: input_number.thermtemp_03
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 56px
+          - padding: 0
+          - background: none
+          - border: none
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"t"'
+          - grid-template-columns: minmax(0, 1fr)
+        custom_fields:
+          t:
+            - justify-self: stretch
+      custom_fields:
+        t: |
+          [[[
+            const o = states['input_number.thermtemp_03'];
+            const v = o ? parseFloat(o.state) : NaN;
+            const h = isNaN(v) ? 0 : Math.round(210 - 190 * Math.min(Math.max((v - 14) / 10, 0), 1));
+            const bg = isNaN(v) ? 'rgba(255,255,255,0.55)' : 'hsla(' + h + ',85%,72%,0.4)';
+            const col = isNaN(v) ? 'var(--secondary-text-color)' : 'hsl(' + h + ',65%,32%)';
+            const txt = isNaN(v) ? '--' : (Math.round(v * 10) / 10) + '\u00b0';
+            return `<div style="box-sizing:border-box;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:${bg};border:1px solid rgba(255,255,255,0.8);font-size:24px;font-weight:700;color:${col}">${txt}</div>`;
+          ]]]
+  p3:
+    card:
+      type: custom:button-card
+      icon: mdi:plus
+      show_name: false
+      show_state: false
+      tap_action:
+        action: call-service
+        service: input_number.increment
+        service_data:
+          entity_id: input_number.thermtemp_03
+      styles:
+        card:
+          - width: 40px
+          - height: 40px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: 2px solid rgba(224, 138, 30, 0.55)
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 22px
+          - color: '#E08A1E'
+  n4:
+    card:
+      type: custom:button-card
+      entity: input_datetime.thermsched_04
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 56px
+          - padding: 0
+          - background: none
+          - border: none
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"t"'
+          - grid-template-columns: minmax(0, 1fr)
+        custom_fields:
+          t:
+            - justify-self: stretch
+      custom_fields:
+        t: |
+          [[[
+            const id = 'input_datetime.thermsched_04';
+            const ids = [1, 2, 3, 4, 5, 6].map(k => 'input_datetime.thermsched_0' + k);
+            const mm = s => { const p = String(s).split(' ').pop().split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]); };
+            const d = new Date(); const now = d.getHours() * 60 + d.getMinutes();
+            const mins = ids.map(i => mm(states[i] ? states[i].state : ''));
+            let bi = -1, best = -1;
+            mins.forEach((v, k) => { if (v <= now && v > best) { best = v; bi = k; } });
+            if (bi < 0) mins.forEach((v, k) => { if (v > best) { best = v; bi = k; } });
+            const on = ids[bi] === id;
+            const s = String(states[id] ? states[id].state : '').split(' ').pop();
+            const time = /^\d/.test(s) ? s.slice(0, 5) : s;
+            const box = 'box-sizing:border-box;height:56px;border-radius:14px;padding:6px 12px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;';
+            const look = on ? 'background:rgba(74,144,226,0.22);border:2px solid #4A90E2' : 'background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.8)';
+            return `<div style="${box}${look}"><div style="font-size:12px;line-height:1.2;color:var(--secondary-text-color)">Cooking</div><div style="font-size:20px;line-height:1.2;font-weight:700;color:var(--primary-text-color)">${time}</div></div>`;
+          ]]]
+  m4:
+    card:
+      type: custom:button-card
+      icon: mdi:minus
+      show_name: false
+      show_state: false
+      tap_action:
+        action: call-service
+        service: input_number.decrement
+        service_data:
+          entity_id: input_number.thermtemp_04
+      styles:
+        card:
+          - width: 40px
+          - height: 40px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: 2px solid rgba(74, 144, 226, 0.5)
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 22px
+          - color: '#4A90E2'
+  v4:
+    card:
+      type: custom:button-card
+      entity: input_number.thermtemp_04
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 56px
+          - padding: 0
+          - background: none
+          - border: none
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"t"'
+          - grid-template-columns: minmax(0, 1fr)
+        custom_fields:
+          t:
+            - justify-self: stretch
+      custom_fields:
+        t: |
+          [[[
+            const o = states['input_number.thermtemp_04'];
+            const v = o ? parseFloat(o.state) : NaN;
+            const h = isNaN(v) ? 0 : Math.round(210 - 190 * Math.min(Math.max((v - 14) / 10, 0), 1));
+            const bg = isNaN(v) ? 'rgba(255,255,255,0.55)' : 'hsla(' + h + ',85%,72%,0.4)';
+            const col = isNaN(v) ? 'var(--secondary-text-color)' : 'hsl(' + h + ',65%,32%)';
+            const txt = isNaN(v) ? '--' : (Math.round(v * 10) / 10) + '\u00b0';
+            return `<div style="box-sizing:border-box;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:${bg};border:1px solid rgba(255,255,255,0.8);font-size:24px;font-weight:700;color:${col}">${txt}</div>`;
+          ]]]
+  p4:
+    card:
+      type: custom:button-card
+      icon: mdi:plus
+      show_name: false
+      show_state: false
+      tap_action:
+        action: call-service
+        service: input_number.increment
+        service_data:
+          entity_id: input_number.thermtemp_04
+      styles:
+        card:
+          - width: 40px
+          - height: 40px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: 2px solid rgba(224, 138, 30, 0.55)
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 22px
+          - color: '#E08A1E'
+  n5:
+    card:
+      type: custom:button-card
+      entity: input_datetime.thermsched_05
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 56px
+          - padding: 0
+          - background: none
+          - border: none
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"t"'
+          - grid-template-columns: minmax(0, 1fr)
+        custom_fields:
+          t:
+            - justify-self: stretch
+      custom_fields:
+        t: |
+          [[[
+            const id = 'input_datetime.thermsched_05';
+            const ids = [1, 2, 3, 4, 5, 6].map(k => 'input_datetime.thermsched_0' + k);
+            const mm = s => { const p = String(s).split(' ').pop().split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]); };
+            const d = new Date(); const now = d.getHours() * 60 + d.getMinutes();
+            const mins = ids.map(i => mm(states[i] ? states[i].state : ''));
+            let bi = -1, best = -1;
+            mins.forEach((v, k) => { if (v <= now && v > best) { best = v; bi = k; } });
+            if (bi < 0) mins.forEach((v, k) => { if (v > best) { best = v; bi = k; } });
+            const on = ids[bi] === id;
+            const s = String(states[id] ? states[id].state : '').split(' ').pop();
+            const time = /^\d/.test(s) ? s.slice(0, 5) : s;
+            const box = 'box-sizing:border-box;height:56px;border-radius:14px;padding:6px 12px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;';
+            const look = on ? 'background:rgba(74,144,226,0.22);border:2px solid #4A90E2' : 'background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.8)';
+            return `<div style="${box}${look}"><div style="font-size:12px;line-height:1.2;color:var(--secondary-text-color)">Evening</div><div style="font-size:20px;line-height:1.2;font-weight:700;color:var(--primary-text-color)">${time}</div></div>`;
+          ]]]
+  m5:
+    card:
+      type: custom:button-card
+      icon: mdi:minus
+      show_name: false
+      show_state: false
+      tap_action:
+        action: call-service
+        service: input_number.decrement
+        service_data:
+          entity_id: input_number.thermtemp_05
+      styles:
+        card:
+          - width: 40px
+          - height: 40px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: 2px solid rgba(74, 144, 226, 0.5)
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 22px
+          - color: '#4A90E2'
+  v5:
+    card:
+      type: custom:button-card
+      entity: input_number.thermtemp_05
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 56px
+          - padding: 0
+          - background: none
+          - border: none
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"t"'
+          - grid-template-columns: minmax(0, 1fr)
+        custom_fields:
+          t:
+            - justify-self: stretch
+      custom_fields:
+        t: |
+          [[[
+            const o = states['input_number.thermtemp_05'];
+            const v = o ? parseFloat(o.state) : NaN;
+            const h = isNaN(v) ? 0 : Math.round(210 - 190 * Math.min(Math.max((v - 14) / 10, 0), 1));
+            const bg = isNaN(v) ? 'rgba(255,255,255,0.55)' : 'hsla(' + h + ',85%,72%,0.4)';
+            const col = isNaN(v) ? 'var(--secondary-text-color)' : 'hsl(' + h + ',65%,32%)';
+            const txt = isNaN(v) ? '--' : (Math.round(v * 10) / 10) + '\u00b0';
+            return `<div style="box-sizing:border-box;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:${bg};border:1px solid rgba(255,255,255,0.8);font-size:24px;font-weight:700;color:${col}">${txt}</div>`;
+          ]]]
+  p5:
+    card:
+      type: custom:button-card
+      icon: mdi:plus
+      show_name: false
+      show_state: false
+      tap_action:
+        action: call-service
+        service: input_number.increment
+        service_data:
+          entity_id: input_number.thermtemp_05
+      styles:
+        card:
+          - width: 40px
+          - height: 40px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: 2px solid rgba(224, 138, 30, 0.55)
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 22px
+          - color: '#E08A1E'
+  n6:
+    card:
+      type: custom:button-card
+      entity: input_datetime.thermsched_06
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 56px
+          - padding: 0
+          - background: none
+          - border: none
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"t"'
+          - grid-template-columns: minmax(0, 1fr)
+        custom_fields:
+          t:
+            - justify-self: stretch
+      custom_fields:
+        t: |
+          [[[
+            const id = 'input_datetime.thermsched_06';
+            const ids = [1, 2, 3, 4, 5, 6].map(k => 'input_datetime.thermsched_0' + k);
+            const mm = s => { const p = String(s).split(' ').pop().split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]); };
+            const d = new Date(); const now = d.getHours() * 60 + d.getMinutes();
+            const mins = ids.map(i => mm(states[i] ? states[i].state : ''));
+            let bi = -1, best = -1;
+            mins.forEach((v, k) => { if (v <= now && v > best) { best = v; bi = k; } });
+            if (bi < 0) mins.forEach((v, k) => { if (v > best) { best = v; bi = k; } });
+            const on = ids[bi] === id;
+            const s = String(states[id] ? states[id].state : '').split(' ').pop();
+            const time = /^\d/.test(s) ? s.slice(0, 5) : s;
+            const box = 'box-sizing:border-box;height:56px;border-radius:14px;padding:6px 12px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;';
+            const look = on ? 'background:rgba(74,144,226,0.22);border:2px solid #4A90E2' : 'background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.8)';
+            return `<div style="${box}${look}"><div style="font-size:12px;line-height:1.2;color:var(--secondary-text-color)">Overnight</div><div style="font-size:20px;line-height:1.2;font-weight:700;color:var(--primary-text-color)">${time}</div></div>`;
+          ]]]
+  m6:
+    card:
+      type: custom:button-card
+      icon: mdi:minus
+      show_name: false
+      show_state: false
+      tap_action:
+        action: call-service
+        service: input_number.decrement
+        service_data:
+          entity_id: input_number.thermtemp_06
+      styles:
+        card:
+          - width: 40px
+          - height: 40px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: 2px solid rgba(74, 144, 226, 0.5)
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 22px
+          - color: '#4A90E2'
+  v6:
+    card:
+      type: custom:button-card
+      entity: input_number.thermtemp_06
+      show_icon: false
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 56px
+          - padding: 0
+          - background: none
+          - border: none
+          - box-shadow: none !important
+        grid:
+          - grid-template-areas: '"t"'
+          - grid-template-columns: minmax(0, 1fr)
+        custom_fields:
+          t:
+            - justify-self: stretch
+      custom_fields:
+        t: |
+          [[[
+            const o = states['input_number.thermtemp_06'];
+            const v = o ? parseFloat(o.state) : NaN;
+            const h = isNaN(v) ? 0 : Math.round(210 - 190 * Math.min(Math.max((v - 14) / 10, 0), 1));
+            const bg = isNaN(v) ? 'rgba(255,255,255,0.55)' : 'hsla(' + h + ',85%,72%,0.4)';
+            const col = isNaN(v) ? 'var(--secondary-text-color)' : 'hsl(' + h + ',65%,32%)';
+            const txt = isNaN(v) ? '--' : (Math.round(v * 10) / 10) + '\u00b0';
+            return `<div style="box-sizing:border-box;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:${bg};border:1px solid rgba(255,255,255,0.8);font-size:24px;font-weight:700;color:${col}">${txt}</div>`;
+          ]]]
+  p6:
+    card:
+      type: custom:button-card
+      icon: mdi:plus
+      show_name: false
+      show_state: false
+      tap_action:
+        action: call-service
+        service: input_number.increment
+        service_data:
+          entity_id: input_number.thermtemp_06
+      styles:
+        card:
+          - width: 40px
+          - height: 40px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: 2px solid rgba(224, 138, 30, 0.55)
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 22px
+          - color: '#E08A1E'

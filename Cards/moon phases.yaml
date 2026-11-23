@@ -1,0 +1,65 @@
+type: custom:button-card
+entity: sensor.moonphases
+show_icon: false
+show_name: false
+show_state: false
+tap_action:
+  action: more-info
+styles:
+  card:
+    - padding: 14px 16px
+  grid:
+    - grid-template-areas: '"content"'
+    - grid-template-columns: minmax(0, 1fr)
+  custom_fields:
+    content:
+      - justify-self: stretch
+custom_fields:
+  content: |
+    [[[
+      const SYN = 29.530588853;
+      const REF = Date.UTC(2000, 0, 6, 18, 14, 0);
+      const now = Date.now();
+      const age = (((now - REF) / 86400000) % SYN + SYN) % SYN;
+      const toFull = ((SYN / 2 - age) + SYN) % SYN;
+      const toNew = (SYN - age) % SYN;
+      const lit = Math.round((1 - Math.cos(2 * Math.PI * age / SYN)) / 2 * 100);
+      const fmt = ms => new Date(ms).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+      const days = n => 'in ' + n + ' day' + (n === 1 ? '' : 's');
+
+      const phase = entity.state || '';
+      const pic = (entity.attributes || {}).entity_picture || '';
+      const isFull = phase.toLowerCase().includes('full');
+      const isNew = phase.toLowerCase().includes('new');
+
+      const nFull = Math.max(1, Math.round(toFull));
+      const nNew = Math.max(1, Math.round(toNew));
+      const main = isFull ? 'Full moon tonight' : 'Full moon ' + days(nFull);
+      const sub = isFull ? 'Next new moon ' + days(nNew) : fmt(now + toFull * 86400000);
+      const second = isNew ? 'New moon tonight' : (isFull ? '' : 'New moon ' + days(nNew));
+
+      const shadow = 'rgba(0,0,0,0.4) 0px 2px 4px, rgba(0,0,0,0.3) 0px 2px 13px -1px, rgba(0,0,0,0.2) 0px -3px 5px inset';
+      const img = pic
+        ? `<img src="${pic}" style="width:78%;height:78%;object-fit:contain">`
+        : `<ha-icon icon="mdi:moon-waning-crescent" style="--mdc-icon-size:44px;color:#D8ECFF"></ha-icon>`;
+
+      return `
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="flex:0 0 auto;width:88px;height:88px;border-radius:50%;background:linear-gradient(160deg,#1E3A5F,#2E5C8A);border:2px solid rgba(255,255,255,0.9);box-shadow:${shadow};display:flex;align-items:center;justify-content:center">
+            ${img}
+          </div>
+          <div style="min-width:0;text-align:left">
+            <div style="font-size:16px;color:var(--secondary-text-color)">${phase}</div>
+            <div style="font-size:16px;font-weight:700;color:var(--primary-text-color);line-height:1.2;margin-top:2px">${main}</div>
+            <div style="font-size:15px;color:var(--secondary-text-color);margin-top:2px">${sub}</div>
+            ${second ? `<div style="font-size:13px;color:var(--secondary-text-color);margin-top:2px">${second}</div>` : ''}
+            <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+              <div style="flex:1;height:6px;border-radius:3px;background:rgba(74,144,226,0.2);overflow:hidden">
+                <div style="width:${lit}%;height:100%;background:#4A90E2"></div>
+              </div>
+              <div style="font-size:12px;font-weight:600;color:#4A90E2">${lit}% lit</div>
+            </div>
+          </div>
+        </div>
+      `;
+    ]]]
