@@ -1,0 +1,508 @@
+type: custom:button-card
+entity: sensor.galaxy_vkp_line1
+triggers_update:
+  - sensor.galaxy_vkp_line1
+  - sensor.galaxy_vkp_line2
+show_icon: false
+show_name: false
+show_state: false
+tap_action:
+  action: none
+styles:
+  card:
+    - padding: 14px
+    - user-select: none
+    - -webkit-user-select: none
+    - -webkit-touch-callout: none
+    - -webkit-tap-highlight-color: transparent
+  grid:
+    - grid-template-areas: >-
+        "lcd lcd lcd lcd" "k1 k2 k3 ka" "k4 k5 k6 kb" "k7 k8 k9 ke" "ks k0 kh
+        kx"
+    - grid-template-columns: repeat(4, minmax(0, 1fr))
+    - grid-template-rows: auto auto auto auto auto
+    - gap: 10px
+  custom_fields:
+    lcd:
+      - justify-self: stretch
+custom_fields:
+  lcd: |
+    [[[
+      const clean = id => {
+        const s = states[id] ? states[id].state : '';
+        return (s === 'unknown' || s === 'unavailable') ? '' : s;
+      };
+      const l1 = clean('sensor.galaxy_vkp_line1');
+      const l2 = clean('sensor.galaxy_vkp_line2');
+      const line = t => `<div style="font-family:'Courier New',monospace;font-size:20px;line-height:26px;min-height:26px;letter-spacing:1px;color:#D8ECFF;text-shadow:0 0 6px rgba(140,200,255,0.6);white-space:pre;overflow:hidden;text-align:left">${t}</div>`;
+      return `
+        <div style="background:linear-gradient(160deg,#1E3A5F,#2E5C8A);border-radius:14px;padding:12px 16px;border:1px solid rgba(255,255,255,0.3);box-shadow:inset 0 2px 8px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.7)">
+          ${line(l1)}
+          ${line(l2)}
+        </div>
+      `;
+    ]]]
+  k1:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: '1'
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: '1'
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(255,255,255,0.9)
+        text: '#1F2D3D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  k2:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: '2'
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: '2'
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(255,255,255,0.9)
+        text: '#1F2D3D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  k3:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: '3'
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: '3'
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(255,255,255,0.9)
+        text: '#1F2D3D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  ka:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: A >
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: A
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(74,144,226,0.6)
+        text: '#4A90E2'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  k4:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: '4'
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: '4'
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(255,255,255,0.9)
+        text: '#1F2D3D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  k5:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: '5'
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: '5'
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(255,255,255,0.9)
+        text: '#1F2D3D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  k6:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: '6'
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: '6'
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(255,255,255,0.9)
+        text: '#1F2D3D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  kb:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: B <
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: B
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(74,144,226,0.6)
+        text: '#4A90E2'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  k7:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: '7'
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: '7'
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(255,255,255,0.9)
+        text: '#1F2D3D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  k8:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: '8'
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: '8'
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(255,255,255,0.9)
+        text: '#1F2D3D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  k9:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: '9'
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: '9'
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(255,255,255,0.9)
+        text: '#1F2D3D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  ke:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: ent
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: E
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: '#2E9E6B'
+        text: '#2E9E6B'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  ks:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: '*'
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: '*'
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(255,255,255,0.9)
+        text: '#1F2D3D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  k0:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: '0'
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: '0'
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(255,255,255,0.9)
+        text: '#1F2D3D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  kh:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: '#'
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: '#'
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: rgba(255,255,255,0.9)
+        text: '#1F2D3D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
+  kx:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_state: false
+      name: esc
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: X
+          topic: YOUR TOPIC ADDRESS HERE
+      variables:
+        border: '#E5484D'
+        text: '#E5484D'
+      styles:
+        card:
+          - height: 52px
+          - border-radius: 14px
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "2px solid " + variables.border; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        name:
+          - font-size: 20px
+          - font-weight: 600
+          - color: '[[[ return variables.text; ]]]'
