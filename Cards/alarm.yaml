@@ -1,0 +1,169 @@
+type: custom:button-card
+entity: sensor.flex_status
+show_icon: false
+show_name: false
+show_state: false
+tap_action:
+  action: none
+extra_styles: |
+  @keyframes blink { 50% { opacity: 0.25; } }
+styles:
+  card:
+    - padding: 14px 16px
+  grid:
+    - grid-template-areas: '"status status info info info info" "b1 b1 b2 b2 b3 b3"'
+    - grid-template-columns: repeat(6, 1fr)
+    - grid-template-rows: auto auto
+    - column-gap: 8px
+    - row-gap: 14px
+  custom_fields:
+    status:
+      - justify-self: center
+      - align-self: center
+    info:
+      - justify-self: start
+      - align-self: center
+    b1:
+      - justify-self: stretch
+    b2:
+      - justify-self: stretch
+    b3:
+      - justify-self: stretch
+custom_fields:
+  status:
+    card:
+      type: custom:button-card
+      entity: sensor.flex_status
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      icon: |
+        [[[
+          const st = entity.state;
+          return st === 'Set' ? 'mdi:shield-lock' : st === 'Part Set' ? 'mdi:shield-half-full' : 'mdi:shield-off-outline';
+        ]]]
+      variables:
+        c: |
+          [[[
+            if (states['sensor.alarm_setting_status'].state === 'Setting') return '#E5484D';
+            return entity.state === 'Set' ? '#2E9E6B' : entity.state === 'Part Set' ? '#E08A1E' : '#7D8FA5';
+          ]]]
+      extra_styles: |
+        @keyframes blink { 50% { opacity: 0.25; } }
+      styles:
+        card:
+          - width: 76px
+          - height: 76px
+          - border-radius: 50%
+          - padding: 0
+          - background: rgba(244, 249, 255, 0.85)
+          - border: '[[[ return "3px solid " + variables.c; ]]]'
+          - box-shadow: >-
+              rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 2px 13px
+              -1px, rgba(0, 0, 0, 0.2) 0px -3px 5px inset !important;
+        icon:
+          - width: 38px
+          - color: '[[[ return variables.c; ]]]'
+          - animation: >
+              [[[ return states['sensor.alarm_setting_status'].state ===
+              'Setting' ? 'blink 1s linear infinite' : 'none'; ]]]
+  info: |
+    [[[
+      const st = states['sensor.flex_status'].state;
+      const label = { 'Set': 'Armed', 'Part Set': 'Part set', 'Unset': 'Disarmed' }[st] || st;
+      const col = st === 'Set' ? '#2E9E6B' : st === 'Part Set' ? '#E08A1E' : '#7D8FA5';
+      const items = [
+        ['Intruder', states['sensor.intrusion_status'].state === 'Intrusion Detected'],
+        ['Tamper', states['sensor.tamper_status'].state === 'Tamper'],
+        ['Setting', states['sensor.alarm_setting_status'].state === 'Setting'],
+        ['Smoke', states['switch.smoke'].state === 'on']
+      ];
+      const rows = items.map(([n, bad]) => `
+        <div style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--primary-text-color)">
+          <ha-icon icon="${bad ? 'mdi:shield-alert' : 'mdi:shield-check'}" style="flex-shrink:0;--mdc-icon-size:18px;color:${bad ? '#E5484D' : '#2E9E6B'};${bad ? 'animation:blink 1s linear infinite;' : ''}"></ha-icon>${n}
+        </div>`).join('');
+      return `
+        <div style="font-size:21px;font-weight:700;color:${col}">${label}</div>
+        <div style="display:grid;grid-template-columns:80px 80px;justify-items:start;gap:4px 12px;margin-top:6px;text-align:left">${rows}</div>
+      `;
+    ]]]
+  b1:
+    card:
+      type: custom:button-card
+      entity: sensor.galaxy_group_1
+      name: Full Set
+      icon: mdi:lock
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 64px
+          - border-radius: 16px
+          - padding: 6px
+          - border: '2px solid #E5484D'
+          - background: >
+              [[[ return states['sensor.flex_status'].state === 'Set' ?
+              'rgba(229,72,77,0.2)' : 'rgba(244,249,255,0.85)'; ]]]
+          - box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 6px !important
+        icon:
+          - width: 24px
+          - color: '#E5484D'
+        name:
+          - font-size: 13px
+          - font-weight: 600
+          - color: var(--primary-text-color)
+  b2:
+    card:
+      type: custom:button-card
+      entity: sensor.galaxy_group_1
+      name: Part Set
+      icon: mdi:shield-half-full
+      tap_action:
+        action: call-service
+        service: mqtt.publish
+        service_data:
+          payload: YOUR PAYLOAD HERE
+          topic: selfmon/vmod.010faa/vkp/key
+      styles:
+        card:
+          - height: 64px
+          - border-radius: 16px
+          - padding: 6px
+          - border: '2px solid #E08A1E'
+          - background: >
+              [[[ return states['sensor.flex_status'].state === 'Part Set' ?
+              'rgba(224,138,30,0.2)' : 'rgba(244,249,255,0.85)'; ]]]
+          - box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 6px !important
+        icon:
+          - width: 24px
+          - color: '#E08A1E'
+        name:
+          - font-size: 13px
+          - font-weight: 600
+          - color: var(--primary-text-color)
+  b3:
+    card:
+      type: custom:button-card
+      entity: sensor.galaxy_group_1
+      name: Unset
+      icon: mdi:lock-open
+      tap_action:
+        action: more-info
+      styles:
+        card:
+          - height: 64px
+          - border-radius: 16px
+          - padding: 6px
+          - border: '2px solid #2E9E6B'
+          - background: >
+              [[[ return states['sensor.flex_status'].state === 'Unset' ?
+              'rgba(46,158,107,0.2)' : 'rgba(244,249,255,0.85)'; ]]]
+          - box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 6px !important
+        icon:
+          - width: 24px
+          - color: '#2E9E6B'
+        name:
+          - font-size: 13px
+          - font-weight: 600
+          - color: var(--primary-text-color)
