@@ -1,0 +1,62 @@
+Frost Blue:
+  # Core colors
+  primary-color: "#4A90E2"
+  light-primary-color: "#8DBBF0"
+  dark-primary-color: "#2F6DB5"
+  accent-color: "#5AA9FF"
+
+  # Backgrounds
+  lovelace-background: "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1440 900%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0 300 C240 180 480 420 720 300 S1200 180 1440 320 V0 H0 Z%22 fill=%22white%22 fill-opacity=%220.07%22/%3E%3Cpath d=%22M0 620 C300 520 520 760 820 640 S1240 520 1440 660 V900 H0 Z%22 fill=%22white%22 fill-opacity=%220.08%22/%3E%3Cpath d=%22M0 460 C260 380 540 560 800 470 S1220 380 1440 480%22 fill=%22none%22 stroke=%22white%22 stroke-opacity=%220.15%22 stroke-width=%222%22/%3E%3C/svg%3E') center / cover no-repeat fixed, linear-gradient(160deg, #A9C9EE 0%, #6A9AD4 50%, #3F6FB3 100%) fixed"
+  primary-background-color: "#EEF4FB"
+  secondary-background-color: "#E3ECF7"
+  card-background-color: "#F4F9FF"
+  ha-card-background: "rgba(244, 249, 255, 0.65)"
+
+  # Text
+  primary-text-color: "#1F2D3D"
+  secondary-text-color: "#5B6B7F"
+  disabled-text-color: "#A3B1C2"
+  text-primary-color: "#FFFFFF"
+
+  # Card styling: rounded, soft shadow, frosted glass
+  ha-card-border-radius: "14px"
+  ha-card-border-width: "1px"
+  ha-card-border-color: "rgba(255, 255, 255, 0.85)"
+  ha-card-box-shadow: "inset 1px 1px 1px rgba(255,255,255,0.9), inset -1px -1px 3px rgba(90,130,190,0.2), 6px 6px 14px -4px rgba(15,45,100,0.35), -2px -2px 8px rgba(255,255,255,0.3)"
+  ha-card-backdrop-filter: "blur(12px)"
+
+  # Header and sidebar
+  app-header-background-color: "rgba(244, 249, 255, 0.75)"
+  app-header-text-color: "#1F2D3D"
+  sidebar-background-color: "rgba(244, 249, 255, 0.8)"
+  sidebar-text-color: "#5B6B7F"
+  sidebar-selected-background-color: "rgba(74, 144, 226, 0.15)"
+  sidebar-selected-icon-color: "#4A90E2"
+  sidebar-selected-text-color: "#2F6DB5"
+  sidebar-icon-color: "#7D8FA5"
+
+  # Icons, dividers, switches
+  paper-item-icon-color: "#6B8CB0"
+  paper-item-icon-active-color: "#4A90E2"
+  divider-color: "rgba(80, 120, 180, 0.15)"
+  switch-checked-color: "#4A90E2"
+  switch-checked-track-color: "#8DBBF0"
+  switch-unchecked-color: "#B8C6D6"
+  switch-unchecked-track-color: "#D5DFEA"
+  slider-color: "#4A90E2"
+  slider-bar-color: "#D5DFEA"
+
+  # Dialogs and menus
+  mdc-theme-surface: "#F4F9FF"
+  dialog-backdrop-filter: "blur(10px)"
+  ha-dialog-border-radius: "16px"
+  ha-button-border-radius: "10px"
+  ha-card-header-color: "#1F2D3D"
+
+  # Entity state colors
+  state-icon-color: "#6B8CB0"
+  state-icon-active-color: "#4A90E2"
+  state-light-on-color: "#FFC857"
+  state-climate-heat-color: "#F28B50"
+  state-climate-cool-color: "#4A90E2"
+
